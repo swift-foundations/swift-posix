@@ -5,5 +5,7 @@ topics:
   - foundations
   - posix
 homepage: "https://swift-institute.org"
+socialPreview:
+  displayName: "POSIX"
 readme:
   family: E
