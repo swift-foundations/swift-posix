@@ -1,0 +1,9 @@
+# .github/metadata.yaml
+# Triaged by AI-assisted bulk pass (2026-04-29).
+description: "Type-safe POSIX syscall wrappers for Swift."
+topics:
+  - foundations
+  - posix
+homepage: "https://swift-institute.org"
+readme:
+  family: E
