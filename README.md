@@ -1,7 +1,7 @@
 # POSIX Kernel
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/coenttb/swift-posix/workflows/CI/badge.svg)](https://github.com/coenttb/swift-posix/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-foundations/swift-posix/workflows/CI/badge.svg)](https://github.com/swift-foundations/swift-posix/actions/workflows/ci.yml)
 
 Type-safe POSIX syscall wrappers for Swift. Signals, process management, and dynamic library loading with typed throws and full Sendable compliance.
 
@@ -25,7 +25,7 @@ Type-safe POSIX syscall wrappers for Swift. Signals, process management, and dyn
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/coenttb/swift-posix.git", from: "0.1.0")
+    .package(url: "https://github.com/swift-foundations/swift-posix.git", from: "0.1.0")
 ]
 ```
 
@@ -120,7 +120,7 @@ case .parent(let child):
 
 ### Used By
 
-- [swift-kernel](https://github.com/coenttb/swift-kernel): Higher-level kernel abstractions
+- [swift-kernel](https://github.com/swift-foundations/swift-kernel): Higher-level kernel abstractions
 
 ---
 
