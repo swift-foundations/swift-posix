@@ -60,7 +60,8 @@ extension POSIX.Kernel.File.Move {
                 // Move.Error has no .code accessor (domain cases abstract from POSIX
                 // errno). Pattern-match on .platform — EINTR can only arrive there.
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error
@@ -90,7 +91,8 @@ extension POSIX.Kernel.File.Move {
                 return
             } catch {
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error
@@ -129,7 +131,8 @@ extension POSIX.Kernel.File.Move {
                 return
             } catch {
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error

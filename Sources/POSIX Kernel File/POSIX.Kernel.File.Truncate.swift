@@ -44,7 +44,7 @@ extension POSIX.Kernel.File.Truncate {
             do throws(Error_Primitives.Error) {
                 try ISO_9945.Kernel.File.Truncate.truncate(descriptor, to: length)
                 return
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }
@@ -69,7 +69,7 @@ extension POSIX.Kernel.File.Truncate {
             do throws(Error_Primitives.Error) {
                 try unsafe ISO_9945.Kernel.File.Truncate.truncate(path: path, to: length)
                 return
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

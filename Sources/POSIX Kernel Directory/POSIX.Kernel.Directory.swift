@@ -64,7 +64,8 @@ extension POSIX.Kernel.Directory {
                 // Directory.Error has no .code accessor (domain cases abstract from POSIX
                 // errno). Pattern-match on .platform — EINTR can only arrive there.
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error
@@ -92,7 +93,8 @@ extension POSIX.Kernel.Directory {
                 return try ISO_9945.Kernel.Directory.open(at: path)
             } catch {
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error

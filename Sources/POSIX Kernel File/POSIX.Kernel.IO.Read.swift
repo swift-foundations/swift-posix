@@ -62,7 +62,7 @@ extension POSIX.Kernel.IO.Read {
         while true {
             do throws(ISO_9945.Kernel.IO.Read.Error) {
                 return unsafe try ISO_9945.Kernel.IO.Read.read(descriptor, into: buffer)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }
@@ -85,7 +85,7 @@ extension POSIX.Kernel.IO.Read {
         while true {
             do throws(ISO_9945.Kernel.IO.Read.Error) {
                 return unsafe try ISO_9945.Kernel.IO.Read.pread(descriptor, into: buffer, at: offset)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }

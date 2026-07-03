@@ -88,7 +88,8 @@ extension POSIX.Kernel.File.Open {
                 // EINTR wraps in .platform(...). Pattern-match to detect EINTR —
                 // Open.Error has no `.code` accessor.
                 if case .platform(let primitiveError) = error,
-                   primitiveError.code.isInterrupted {
+                    primitiveError.code.isInterrupted
+                {
                     continue  // Retry on EINTR
                 }
                 throw error

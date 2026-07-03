@@ -51,7 +51,7 @@ extension POSIX.Kernel.File.Flush {
             do throws(ISO_9945.Kernel.File.Flush.Error) {
                 try ISO_9945.Kernel.File.Flush.fsync(descriptor)
                 return
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

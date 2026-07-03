@@ -68,7 +68,7 @@ extension POSIX.Kernel.Process.Wait {
         while true {
             do throws(ISO_9945.Kernel.Process.Error) {
                 return try ISO_9945.Kernel.Process.Wait.wait(selector, options: options)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

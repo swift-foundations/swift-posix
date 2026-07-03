@@ -54,7 +54,7 @@ extension POSIX.Kernel.Socket.Accept {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
                 return try ISO_9945.Kernel.Socket.Accept.accept(descriptor)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }

@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Path_Primitives
 @_spi(Syscall) public import ISO_9945_Kernel_File
+public import Path_Primitives
 
 // MARK: - POSIX directory(path:) — open(O_RDONLY) + fsync + close composition
 

@@ -33,7 +33,7 @@ public import ISO_9945_Kernel_Directory
 // the original (point-in-time correct) "no Stream typealias" decision;
 // supersession is documented here in this file's header + audit doc
 // Final-3 close note (per principal Q3 disposition: leave historical
-// MARK comment untouched, document supersession in new file headers).
+// MARK: comment untouched, document supersession in new file headers).
 
 extension POSIX.Kernel.Directory {
     /// Directory iteration stream (final class) — typealias to canonical

@@ -49,6 +49,7 @@ extension POSIX.Kernel.Close {
             switch error {
             case .handle(let e):
                 throw .handle(e)
+
             case .platform(let e):
                 throw .platform(e)
             }

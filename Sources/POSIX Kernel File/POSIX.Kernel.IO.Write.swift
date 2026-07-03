@@ -68,7 +68,7 @@ extension POSIX.Kernel.IO.Write {
         while true {
             do throws(ISO_9945.Kernel.IO.Write.Error) {
                 return unsafe try ISO_9945.Kernel.IO.Write.write(descriptor, from: buffer)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }
@@ -94,7 +94,7 @@ extension POSIX.Kernel.IO.Write {
         while true {
             do throws(ISO_9945.Kernel.IO.Write.Error) {
                 return unsafe try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: buffer, at: offset)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

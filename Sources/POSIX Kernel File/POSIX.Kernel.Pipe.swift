@@ -48,7 +48,7 @@ extension POSIX.Kernel.Pipe {
         while true {
             do throws(ISO_9945.Kernel.Pipe.Error) {
                 return try ISO_9945.Kernel.Pipe.pipe()
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

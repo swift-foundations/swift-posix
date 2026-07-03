@@ -47,7 +47,7 @@ extension POSIX.Kernel.Socket.Receive {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
                 return try ISO_9945.Kernel.Socket.Receive.receive(descriptor, into: &span, options: options)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }
@@ -70,7 +70,7 @@ extension POSIX.Kernel.Socket.Receive {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
                 return try ISO_9945.Kernel.Socket.Receive.from(descriptor, into: &span, options: options)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }
@@ -93,7 +93,7 @@ extension POSIX.Kernel.Socket.Receive {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
                 return try ISO_9945.Kernel.Socket.Receive.message(descriptor, header: &header, options: options)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }

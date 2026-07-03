@@ -9,11 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Path_Primitives
-internal import ISO_9945_Kernel_Directory
-@_spi(Syscall) internal import ISO_9945_Kernel_File
 public import Glob_Primitives
 internal import ISO_9945_Glob
+internal import ISO_9945_Kernel_Directory
+@_spi(Syscall) internal import ISO_9945_Kernel_File
+public import Path_Primitives
 
 // MARK: - POSIX Glob Implementation
 
@@ -184,16 +184,21 @@ extension Glob {
             // Convert pattern segment to path view and match against entries.
             // Pattern strings from pattern.raw should never contain interior NUL;
             // if conversion fails, treat as no matches.
-            let matchedEntries: [ISO_9945.Kernel.Directory.Entry] = (try? Path.scope(segmentStrings[segmentIndex]) { segmentView in
-                entries.filter { entry in
-                    if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
-                    return ISO_9945.Glob.fnmatch(
-                        pattern: segmentView,
-                        name: entry.name,
-                        options: fnmatchFlags
-                    )
+            let matchedEntries: [ISO_9945.Kernel.Directory.Entry]
+            do {
+                matchedEntries = try Path.scope(segmentStrings[segmentIndex]) { segmentView in
+                    entries.filter { entry in
+                        if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
+                        return ISO_9945.Glob.fnmatch(
+                            pattern: segmentView,
+                            name: entry.name,
+                            options: fnmatchFlags
+                        )
+                    }
                 }
-            }) ?? []
+            } catch {
+                matchedEntries = []
+            }
 
             for entry in matchedEntries {
                 let nextPath = appendPath(currentPath, entry)
@@ -231,11 +236,12 @@ extension Glob {
                 let nextPath = appendPath(currentPath, entry)
 
                 // Use d_type when available to avoid stat() syscall
-                let entryIsDir: Bool = if let type = entry.type {
-                    type == .directory
-                } else {
-                    isDirectory(nextPath.view, followSymlinks: options.followSymlinks)
-                }
+                let entryIsDir: Bool =
+                    if let type = entry.type {
+                        type == .directory
+                    } else {
+                        isDirectory(nextPath.view, followSymlinks: options.followSymlinks)
+                    }
 
                 if entryIsDir {
                     try matchSegments(
@@ -264,15 +270,17 @@ extension Glob {
     ) -> Bool {
         let name = entry.name
         guard name.count > 0,
-              unsafe name.pointer[0] == ASCII.Character.Graphic.period
+            unsafe name.pointer[0] == ASCII.Character.Graphic.period
         else { return false }
         guard !entry.isDotOrDotDot else { return false }
 
         switch options.dotfiles {
         case .always:
             return false
+
         case .never:
             return true
+
         case .explicit:
             return forDoubleStar
         }
@@ -316,14 +324,25 @@ extension Glob {
 
     /// Checks if path exists via L2 `ISO_9945.Kernel.File.Stats`.
     private static func pathExists(_ path: borrowing Path.Borrowed) -> Bool {
-        (try? ISO_9945.Kernel.File.Stats.get(path: path)) != nil
+        do {
+            _ = try ISO_9945.Kernel.File.Stats.get(path: path)
+            return true
+        } catch {
+            return false
+        }
     }
 
     /// Checks if path is a directory via L2 `ISO_9945.Kernel.File.Stats`.
     private static func isDirectory(_ path: borrowing Path.Borrowed, followSymlinks: Bool) -> Bool {
-        let stats: ISO_9945.Kernel.File.Stats? = followSymlinks
-            ? try? ISO_9945.Kernel.File.Stats.get(path: path)
-            : try? ISO_9945.Kernel.File.Stats.lget(path: path)
+        let stats: ISO_9945.Kernel.File.Stats?
+        do {
+            stats =
+                followSymlinks
+                ? try ISO_9945.Kernel.File.Stats.get(path: path)
+                : try ISO_9945.Kernel.File.Stats.lget(path: path)
+        } catch {
+            stats = nil
+        }
         return stats?.type == .directory
     }
 
@@ -401,12 +420,16 @@ extension Glob.Error {
         switch error {
         case .permission:
             self = .accessDenied(path: path)
+
         case .notFound:
             self = .notFound(path: path)
+
         case .notDirectory:
             self = .notDirectory(path: path)
+
         case .tooManyOpenFiles:
             self = .io(path: path, category: .tooManyOpenFiles)
+
         case .io, .platform:
             self = .io(path: path, category: .read)
         }

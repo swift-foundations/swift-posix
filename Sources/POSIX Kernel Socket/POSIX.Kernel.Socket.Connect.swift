@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_spi(Syscall) public import ISO_9945_Kernel_Socket
 @_spi(Syscall) public import ISO_9945_Kernel_Poll
+@_spi(Syscall) public import ISO_9945_Kernel_Socket
 
 // MARK: - EINTR-Safe Connect Operation
 
@@ -69,7 +69,7 @@ extension POSIX.Kernel.Socket.Connect {
             do throws(Error_Primitives.Error) {
                 let ready = try ISO_9945.Kernel.Poll.poll(&entries, timeout: -1)
                 if ready > 0 { break }
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             } catch {
                 throw .platform(error)
@@ -100,7 +100,7 @@ extension POSIX.Kernel.Socket.Connect {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         do throws(ISO_9945.Kernel.Socket.Error) {
             try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address, length: length)
-        } catch where error.code.isInterrupted {
+        } catch  where error.code.isInterrupted {
             try awaitCompletion(descriptor)
         }
     }
@@ -112,7 +112,7 @@ extension POSIX.Kernel.Socket.Connect {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         do throws(ISO_9945.Kernel.Socket.Error) {
             try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address)
-        } catch where error.code.isInterrupted {
+        } catch  where error.code.isInterrupted {
             try awaitCompletion(descriptor)
         }
     }
@@ -124,7 +124,7 @@ extension POSIX.Kernel.Socket.Connect {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         do throws(ISO_9945.Kernel.Socket.Error) {
             try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address)
-        } catch where error.code.isInterrupted {
+        } catch  where error.code.isInterrupted {
             try awaitCompletion(descriptor)
         }
     }
@@ -136,7 +136,7 @@ extension POSIX.Kernel.Socket.Connect {
     ) throws(ISO_9945.Kernel.Socket.Error) {
         do throws(ISO_9945.Kernel.Socket.Error) {
             try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address)
-        } catch where error.code.isInterrupted {
+        } catch  where error.code.isInterrupted {
             try awaitCompletion(descriptor)
         }
     }

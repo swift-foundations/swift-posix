@@ -65,7 +65,7 @@ extension POSIX.Kernel.Poll {
         while true {
             do throws(Error_Primitives.Error) {
                 return try ISO_9945.Kernel.Poll.poll(&entries, timeout: timeout)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
         }

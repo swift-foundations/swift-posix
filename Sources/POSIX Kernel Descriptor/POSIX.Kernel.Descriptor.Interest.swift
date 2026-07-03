@@ -51,16 +51,16 @@ extension POSIX.Kernel.Descriptor {
         }
 
         /// Interest in read readiness (data available to read).
-        public static let read = Interest(rawValue: 1 << 0)
+        public static let read = Self(rawValue: 1 << 0)
 
         /// Interest in write readiness (buffer space available for writing).
-        public static let write = Interest(rawValue: 1 << 1)
+        public static let write = Self(rawValue: 1 << 1)
 
         /// Interest in priority/out-of-band data (platform-specific).
         ///
         /// On Linux, this maps to `EPOLLPRI` (urgent data).
         /// On Darwin, this is less commonly used.
-        public static let priority = Interest(rawValue: 1 << 2)
+        public static let priority = Self(rawValue: 1 << 2)
     }
 }
 
