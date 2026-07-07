@@ -303,7 +303,7 @@ extension Glob {
             stream = try ISO_9945.Kernel.Directory.open(at: path)
         } catch {
             if options.onError == .skip { return [] }
-            throw Error(from: error, pathView: path)
+            throw Self.Error(from: error, pathView: path)
         }
         defer { stream.close() }
 
@@ -315,7 +315,7 @@ extension Glob {
             }
         } catch {
             if options.onError != .skip {
-                throw Error(from: error, pathView: path)
+                throw Self.Error(from: error, pathView: path)
             }
         }
 

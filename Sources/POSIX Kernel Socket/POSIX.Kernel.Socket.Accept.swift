@@ -23,7 +23,7 @@ public import ISO_9945_Kernel_Socket
 ///
 /// Use this wrapper when you want the standard "retry on EINTR" behavior.
 /// Use the raw `ISO_9945.Kernel.Socket.Accept` when you need to handle EINTR
-/// explicitly (e.g., for graceful shutdown via signal).
+/// explicitly, such as for graceful shutdown via signal.
 ///
 /// ## Example
 ///

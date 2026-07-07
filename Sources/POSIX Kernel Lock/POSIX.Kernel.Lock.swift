@@ -50,7 +50,7 @@ extension POSIX.Kernel.Lock {
     /// L3-policy wrapper composing the L2 typed `fcntl(fd, F_SETLKW, ...)`
     /// form (`ISO_9945.Kernel.Lock.lock(_:range:kind:)`) with the
     /// `POSIX.Kernel.Descriptor` policy typealias. Error type is the L2 error;
-    /// future policy refinements (e.g., normalized error mapping) live here.
+    /// future policy refinements, such as normalized error mapping, live here.
     ///
     /// - Parameters:
     ///   - descriptor: The file descriptor.

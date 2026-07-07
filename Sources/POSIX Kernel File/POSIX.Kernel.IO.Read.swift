@@ -23,7 +23,7 @@ public import ISO_9945_Kernel_File
 ///
 /// Use these wrappers when you want the standard "retry on EINTR" behavior.
 /// Use the raw `ISO_9945.Kernel.IO.Read` functions when you need to handle
-/// EINTR explicitly (e.g., for interruptible I/O with signal handling).
+/// EINTR explicitly, such as for interruptible I/O with signal handling.
 ///
 /// ## Example
 ///

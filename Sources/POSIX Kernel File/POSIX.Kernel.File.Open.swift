@@ -37,10 +37,10 @@ extension POSIX.Kernel.File {
         /// Open error type — typealias to canonical iso-9945 home.
         public typealias Error = ISO_9945.Kernel.File.Open.Error
 
-        /// Open mode (read/write/append/etc.) — typealias.
+        /// Open mode (read, write, append) — typealias.
         public typealias Mode = ISO_9945.Kernel.File.Open.Mode
 
-        /// Open options (O_CREAT/O_EXCL/etc.) — typealias.
+        /// Open options (O_CREAT, O_EXCL) — typealias.
         public typealias Options = ISO_9945.Kernel.File.Open.Options
 
         // Note: `Open.Configuration` is defined at swift-kernel L3 (extension
@@ -65,7 +65,7 @@ extension POSIX.Kernel.File.Open {
     /// - Parameters:
     ///   - path: The file path to open (borrowed, zero-copy).
     ///   - mode: Read/write access mode (.read, .write, or .readWrite).
-    ///   - options: Creation and behavior options (.create, .truncate, etc.).
+    ///   - options: Creation and behavior options, such as .create or .truncate.
     ///   - permissions: POSIX permissions for newly created files.
     /// - Returns: A file descriptor for the opened file.
     /// - Throws: ``ISO_9945/Kernel/File/Open/Error`` on failure (excluding EINTR).

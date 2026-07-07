@@ -49,7 +49,7 @@ extension ISO_9945.Kernel.File.Handle {
     @inlinable
     public borrowing func writeAll(
         from buffer: UnsafeRawBufferPointer
-    ) throws(Either<Error, Interrupt>) {
+    ) throws(Either<Self.Error, Interrupt>) {
         guard let baseAddress = buffer.baseAddress else {
             return
         }
@@ -69,11 +69,11 @@ extension ISO_9945.Kernel.File.Handle {
                 if error.code.isInterrupted {
                     throw .right(.occurred)
                 }
-                throw .left(Error(from: error, operation: .write))
+                throw .left(Self.Error(from: error, operation: .write))
             }
             if n == 0 {
                 // Should not happen for regular files, but handle gracefully.
-                throw .left(Error(from: ISO_9945.Kernel.IO.Write.Error.platform(Error_Primitives.Error(code: .POSIX.EIO)), operation: .write))
+                throw .left(Self.Error(from: ISO_9945.Kernel.IO.Write.Error.platform(Error_Primitives.Error(code: .POSIX.EIO)), operation: .write))
             }
             written += n
         }
@@ -96,9 +96,9 @@ extension ISO_9945.Kernel.File.Handle {
     @inlinable
     public borrowing func writeAll(
         from span: Swift.Span<Byte>
-    ) throws(Either<Error, Interrupt>) {
+    ) throws(Either<Self.Error, Interrupt>) {
         try unsafe span.withUnsafeBytes {
-            (buffer: UnsafeRawBufferPointer) throws(Either<Error, Interrupt>) in
+            (buffer: UnsafeRawBufferPointer) throws(Either<Self.Error, Interrupt>) in
             try unsafe writeAll(from: buffer)
         }
     }
