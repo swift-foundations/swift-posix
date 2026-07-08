@@ -33,19 +33,21 @@ public import ISO_9945_Kernel_File
 
 extension POSIX.Kernel.File {
     /// File open operations — namespace enum hosting L3-policy methods.
-    public enum Open {
-        /// Open error type — typealias to canonical iso-9945 home.
-        public typealias Error = ISO_9945.Kernel.File.Open.Error
+    public enum Open {}
+}
 
-        /// Open mode (read, write, append) — typealias.
-        public typealias Mode = ISO_9945.Kernel.File.Open.Mode
+// Note: `Open.Configuration` is defined at swift-kernel L3 (extension
+// on Kernel.File.Open); attaches to this enum via the typealias chain.
 
-        /// Open options (O_CREAT, O_EXCL) — typealias.
-        public typealias Options = ISO_9945.Kernel.File.Open.Options
+extension POSIX.Kernel.File.Open {
+    /// Open error type — typealias to canonical iso-9945 home.
+    public typealias Error = ISO_9945.Kernel.File.Open.Error
 
-        // Note: `Open.Configuration` is defined at swift-kernel L3 (extension
-        // on Kernel.File.Open); attaches to this enum via the typealias chain.
-    }
+    /// Open mode (read, write, append) — typealias.
+    public typealias Mode = ISO_9945.Kernel.File.Open.Mode
+
+    /// Open options (O_CREAT, O_EXCL) — typealias.
+    public typealias Options = ISO_9945.Kernel.File.Open.Options
 }
 
 // MARK: - L3-policy method (EINTR retry)

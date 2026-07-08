@@ -21,16 +21,18 @@ public import ISO_9945_Kernel_File
 
 extension POSIX.Kernel {
     /// Pipe operations with EINTR retry policy.
-    public enum Pipe {
-        /// Wave 3.5-Final-Atomic gap-fill (2026-05-02): pipe descriptor pair
-        /// (Tagged<Pipe, Pair<Descriptor, Descriptor>> at iso-9945) — typealias
-        /// to canonical home so cross-platform L3-unifier code referencing
-        /// `Kernel.Pipe.Descriptors` resolves post-flip.
-        public typealias Descriptors = ISO_9945.Kernel.Pipe.Descriptors
+    public enum Pipe {}
+}
 
-        /// Wave 3.5-Final-Atomic gap-fill (2026-05-02): pipe error.
-        public typealias Error = ISO_9945.Kernel.Pipe.Error
-    }
+extension POSIX.Kernel.Pipe {
+    /// Wave 3.5-Final-Atomic gap-fill (2026-05-02): pipe descriptor pair
+    /// (Tagged<Pipe, Pair<Descriptor, Descriptor>> at iso-9945) — typealias
+    /// to canonical home so cross-platform L3-unifier code referencing
+    /// `Kernel.Pipe.Descriptors` resolves post-flip.
+    public typealias Descriptors = ISO_9945.Kernel.Pipe.Descriptors
+
+    /// Wave 3.5-Final-Atomic gap-fill (2026-05-02): pipe error.
+    public typealias Error = ISO_9945.Kernel.Pipe.Error
 }
 
 extension POSIX.Kernel.Pipe {

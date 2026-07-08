@@ -185,7 +185,7 @@ extension Glob {
             // Pattern strings from pattern.raw should never contain interior NUL;
             // if conversion fails, treat as no matches.
             let matchedEntries: [ISO_9945.Kernel.Directory.Entry]
-            do {
+            do throws(Path.String.Conversion.Error) {
                 matchedEntries = try Path.scope(segmentStrings[segmentIndex]) { segmentView in
                     entries.filter { entry in
                         if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
@@ -324,7 +324,7 @@ extension Glob {
 
     /// Checks if path exists via L2 `ISO_9945.Kernel.File.Stats`.
     private static func pathExists(_ path: borrowing Path.Borrowed) -> Bool {
-        do {
+        do throws(ISO_9945.Kernel.File.Stats.Error) {
             _ = try ISO_9945.Kernel.File.Stats.get(path: path)
             return true
         } catch {
@@ -335,7 +335,7 @@ extension Glob {
     /// Checks if path is a directory via L2 `ISO_9945.Kernel.File.Stats`.
     private static func isDirectory(_ path: borrowing Path.Borrowed, followSymlinks: Bool) -> Bool {
         let stats: ISO_9945.Kernel.File.Stats?
-        do {
+        do throws(ISO_9945.Kernel.File.Stats.Error) {
             stats =
                 followSymlinks
                 ? try ISO_9945.Kernel.File.Stats.get(path: path)

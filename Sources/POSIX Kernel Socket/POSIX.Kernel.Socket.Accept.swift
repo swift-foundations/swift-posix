@@ -36,10 +36,12 @@ public import ISO_9945_Kernel_Socket
 /// ```
 extension POSIX.Kernel {
     /// Socket operations namespace.
-    public enum Socket {
-        /// Accept operations with EINTR retry policy.
-        public enum Accept {}
-    }
+    public enum Socket {}
+}
+
+extension POSIX.Kernel.Socket {
+    /// Accept operations with EINTR retry policy.
+    public enum Accept {}
 }
 
 extension POSIX.Kernel.Socket.Accept {

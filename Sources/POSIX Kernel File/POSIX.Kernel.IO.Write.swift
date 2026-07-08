@@ -36,10 +36,12 @@ public import ISO_9945_Kernel_File
 /// ```
 extension POSIX.Kernel {
     /// I/O write operations namespace.
-    public enum IO {
-        /// Write operations with EINTR retry policy.
-        public enum Write {}
-    }
+    public enum IO {}
+}
+
+extension POSIX.Kernel.IO {
+    /// Write operations with EINTR retry policy.
+    public enum Write {}
 }
 
 // MARK: - Wave 3.5-Final-1 (2026-05-02) — value-type typealias for nested Error

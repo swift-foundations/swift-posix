@@ -18,28 +18,30 @@ extension POSIX.Kernel {
     /// L3-policy throwing wrappers composing the iso-9945 raw `fcntl` SPI
     /// forms per [PLAT-ARCH-008e] (L3-unifier composes L3-policy) and
     /// [PLAT-ARCH-005] revised (descriptor type lives at L3-policy).
-    public enum Lock: Sendable {
-        /// Errors thrown by file-locking operations.
-        public typealias Error = ISO_9945.Kernel.Lock.Error
+    public enum Lock: Sendable {}
+}
 
-        /// Range descriptor for a lock.
-        public typealias Range = ISO_9945.Kernel.Lock.Range
+extension POSIX.Kernel.Lock {
+    /// Errors thrown by file-locking operations.
+    public typealias Error = ISO_9945.Kernel.Lock.Error
 
-        /// Lock kind (shared or exclusive).
-        public typealias Kind = ISO_9945.Kernel.Lock.Kind
+    /// Range descriptor for a lock.
+    public typealias Range = ISO_9945.Kernel.Lock.Range
 
-        /// Lock acquisition mode (Wave 3.5-Final-Atomic gap-fill 2026-05-02).
-        public typealias Acquire = ISO_9945.Kernel.Lock.Acquire
+    /// Lock kind (shared or exclusive).
+    public typealias Kind = ISO_9945.Kernel.Lock.Kind
 
-        /// Lock token (~Copyable RAII handle; Wave 3.5-Final-Atomic gap-fill 2026-05-02).
-        public typealias Token = ISO_9945.Kernel.Lock.Token
+    /// Lock acquisition mode (Wave 3.5-Final-Atomic gap-fill 2026-05-02).
+    public typealias Acquire = ISO_9945.Kernel.Lock.Acquire
 
-        /// Lock scope namespace (Wave 3.5-Final-Atomic gap-fill 2026-05-02).
-        public typealias Scope = ISO_9945.Kernel.Lock.Scope
+    /// Lock token (~Copyable RAII handle; Wave 3.5-Final-Atomic gap-fill 2026-05-02).
+    public typealias Token = ISO_9945.Kernel.Lock.Token
 
-        /// Non-blocking lock operations.
-        public enum Immediate: Sendable {}
-    }
+    /// Lock scope namespace (Wave 3.5-Final-Atomic gap-fill 2026-05-02).
+    public typealias Scope = ISO_9945.Kernel.Lock.Scope
+
+    /// Non-blocking lock operations.
+    public enum Immediate: Sendable {}
 }
 
 // MARK: - Blocking lock / unlock

@@ -38,10 +38,12 @@
         /// L3-policy wrappers composing iso-9945 raw SPI forms per
         /// [PLAT-ARCH-008e] (L3-unifier composes L3-policy) and [PLAT-ARCH-005]
         /// revised (descriptor type lives at L3-policy).
-        public enum TTY: Sendable {
-            /// Terminal size — namespace enum hosting L3-policy methods.
-            public enum Size {}
-        }
+        public enum TTY: Sendable {}
+    }
+
+    extension POSIX.Kernel.TTY {
+        /// Terminal size — namespace enum hosting L3-policy methods.
+        public enum Size {}
     }
 
     // MARK: - TTY Check

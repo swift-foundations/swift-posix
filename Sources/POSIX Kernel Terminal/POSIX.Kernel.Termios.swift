@@ -33,16 +33,20 @@
 
     extension POSIX.Kernel {
         /// Policy-aware POSIX termios (terminal attribute) operations.
-        public enum Termios: Sendable {
-            /// Terminal attributes — namespace enum hosting L3-policy methods.
-            public enum Attributes {
-                /// Opaque storage for the underlying termios structure (typealias).
-                public typealias Storage = ISO_9945.Kernel.Termios.Attributes.Storage
+        public enum Termios: Sendable {}
+    }
 
-                /// When to apply terminal attribute changes (typealias).
-                public typealias Action = ISO_9945.Kernel.Termios.Attributes.Action
-            }
-        }
+    extension POSIX.Kernel.Termios {
+        /// Terminal attributes — namespace enum hosting L3-policy methods.
+        public enum Attributes {}
+    }
+
+    extension POSIX.Kernel.Termios.Attributes {
+        /// Opaque storage for the underlying termios structure (typealias).
+        public typealias Storage = ISO_9945.Kernel.Termios.Attributes.Storage
+
+        /// When to apply terminal attribute changes (typealias).
+        public typealias Action = ISO_9945.Kernel.Termios.Attributes.Action
     }
 
     // MARK: - Termios Attributes Get

@@ -57,7 +57,7 @@ extension POSIX.Kernel.File.Flush {
 
     /// Opens a directory for flushing, retrying on EINTR during the open syscall.
     @inlinable
-    internal static func _openForDirectoryFlush(
+    package static func _openForDirectoryFlush(
         path: borrowing Path.Borrowed
     ) throws(ISO_9945.Kernel.File.Open.Error) -> ISO_9945.Kernel.Descriptor {
         while true {

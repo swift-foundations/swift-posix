@@ -31,37 +31,39 @@ public import ISO_9945_Kernel_Memory
 
 extension POSIX.Kernel.Memory {
     /// Memory mapping operations — namespace enum hosting L3-policy methods.
-    public enum Map {
-        /// Mapped memory region (typealias to canonical L1 home).
-        public typealias Region = Memory.Map.Region
+    ///
+    /// Note: `Anonymous` sub-namespace declared in
+    /// `POSIX.Kernel.Memory.Map.Anonymous.swift` (one type per file).
+    public enum Map {}
+}
 
-        /// Memory map error (typealias to canonical L1 home).
-        public typealias Error = Memory.Map.Error
+extension POSIX.Kernel.Memory.Map {
+    /// Mapped memory region (typealias to canonical L1 home).
+    public typealias Region = Memory.Map.Region
 
-        /// Memory protection flags (typealias to canonical L1 home).
-        public typealias Protection = Memory.Map.Protection
+    /// Memory map error (typealias to canonical L1 home).
+    public typealias Error = Memory.Map.Error
 
-        /// Memory map options (typealias to canonical L1 home).
-        public typealias Options = Memory.Map.Options
+    /// Memory protection flags (typealias to canonical L1 home).
+    public typealias Protection = Memory.Map.Protection
 
-        /// Memory map sync sub-namespace (typealias to canonical L1 home).
-        public typealias Sync = Memory.Map.Sync
+    /// Memory map options (typealias to canonical L1 home).
+    public typealias Options = Memory.Map.Options
 
-        /// Memory map advice (typealias to canonical L1 home).
-        public typealias Advice = Memory.Map.Advice
+    /// Memory map sync sub-namespace (typealias to canonical L1 home).
+    public typealias Sync = Memory.Map.Sync
 
-        /// Memory map access mode (typealias to canonical L1 home).
-        public typealias Access = Memory.Map.Access
+    /// Memory map advice (typealias to canonical L1 home).
+    public typealias Advice = Memory.Map.Advice
 
-        /// Memory map sharing mode (typealias to canonical L1 home).
-        public typealias Sharing = Memory.Map.Sharing
+    /// Memory map access mode (typealias to canonical L1 home).
+    public typealias Access = Memory.Map.Access
 
-        /// Memory map safety mode (typealias to canonical L1 home).
-        public typealias Safety = Memory.Map.Safety
+    /// Memory map sharing mode (typealias to canonical L1 home).
+    public typealias Sharing = Memory.Map.Sharing
 
-        // Note: `Anonymous` sub-namespace declared in
-        // `POSIX.Kernel.Memory.Map.Anonymous.swift` (one type per file).
-    }
+    /// Memory map safety mode (typealias to canonical L1 home).
+    public typealias Safety = Memory.Map.Safety
 }
 
 // MARK: - L3-policy methods

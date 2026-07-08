@@ -49,19 +49,21 @@ extension POSIX.Kernel.Descriptor {
         public init(rawValue: UInt8) {
             self.rawValue = rawValue
         }
-
-        /// Interest in read readiness (data available to read).
-        public static let read = Self(rawValue: 1 << 0)
-
-        /// Interest in write readiness (buffer space available for writing).
-        public static let write = Self(rawValue: 1 << 1)
-
-        /// Interest in priority/out-of-band data (platform-specific).
-        ///
-        /// On Linux, this maps to `EPOLLPRI` (urgent data).
-        /// On Darwin, this is less commonly used.
-        public static let priority = Self(rawValue: 1 << 2)
     }
+}
+
+extension POSIX.Kernel.Descriptor.Interest {
+    /// Interest in read readiness (data available to read).
+    public static let read = Self(rawValue: 1 << 0)
+
+    /// Interest in write readiness (buffer space available for writing).
+    public static let write = Self(rawValue: 1 << 1)
+
+    /// Interest in priority/out-of-band data (platform-specific).
+    ///
+    /// On Linux, this maps to `EPOLLPRI` (urgent data).
+    /// On Darwin, this is less commonly used.
+    public static let priority = Self(rawValue: 1 << 2)
 }
 
 // MARK: - CustomStringConvertible
