@@ -25,7 +25,7 @@
     extension Glob {
         enum Test {
             @Suite struct Unit {}
-            @Suite struct EdgeCase {}
+            @Suite struct `Edge Case` {}
             @Suite struct Integration {}
             @Suite(.serialized) struct Performance {}
         }
@@ -500,7 +500,7 @@
 
     // MARK: - Edge Cases
 
-    extension Glob.Test.EdgeCase {
+    extension Glob.Test.`Edge Case` {
         @Test
         func `Match empty pattern`() throws {
             try withTestDirectory { dir in
