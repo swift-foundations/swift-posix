@@ -17,6 +17,12 @@ jobs:
   # Build + test matrix — see swift-foundations/.github/.github/workflows/swift-ci.yml (layer wrapper)
   ci:
     uses: swift-foundations/.github/.github/workflows/swift-ci.yml@main
+    with:
+      # POSIX platform package: composes the ISO/IEC 9945 (POSIX) surface.
+      # Windows is not a POSIX system, so a Windows CI leg is illegitimate
+      # here ([PLAT-ARCH-001]: the Windows counterpart is swift-windows /
+      # swift-windows-standard, selected at the L3 seam).
+      platform-support: apple,linux
     secrets: inherit
 
   # DocC umbrella-catalog pipeline per [DOC-019a] — see
