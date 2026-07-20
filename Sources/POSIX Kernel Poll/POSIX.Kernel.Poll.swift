@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import ISO_9945_Kernel_Poll
+public import POSIX_Kernel_Clock
 
 // MARK: - POSIX Poll policy
 //
@@ -54,7 +55,12 @@ extension POSIX.Kernel.Poll {
     ///   - timeout: Maximum time to wait in milliseconds.
     ///     - `-1`: Block indefinitely.
     ///     - `0`: Return immediately (non-blocking poll).
-    ///     - `> 0`: Wait up to this many milliseconds.
+    ///     - `> 0`: Wait up to this many milliseconds. The timeout is a
+    ///       deadline: EINTR retries resume with the remaining time on the
+    ///       continuous (monotonic) clock, and the call returns 0 if the
+    ///       deadline elapses during a retry. Callers that want the raw
+    ///       restart-on-EINTR syscall behavior should use the L2 form
+    ///       ``ISO_9945/Kernel/Poll/poll(_:timeout:)`` directly.
     /// - Returns: The number of entries with events, or 0 on timeout.
     /// - Throws: `Error_Primitives.Error` on failure (excluding EINTR).
     @inlinable
@@ -62,11 +68,33 @@ extension POSIX.Kernel.Poll {
         _ entries: inout [ISO_9945.Kernel.Poll.Entry],
         timeout: Int32
     ) throws(Error_Primitives.Error) -> Int {
+        // Non-positive timeouts carry no deadline: -1 blocks indefinitely,
+        // 0 returns immediately. Plain EINTR retry is correct for both.
+        guard timeout > 0 else {
+            while true {
+                do throws(Error_Primitives.Error) {
+                    return try ISO_9945.Kernel.Poll.poll(&entries, timeout: timeout)
+                } catch  where error.code.isInterrupted {
+                    continue  // Retry on EINTR
+                }
+            }
+        }
+
+        // Bounded wait: track the deadline on the continuous (monotonic)
+        // clock so EINTR retries consume the original budget instead of
+        // restarting the full timeout (fable-448 F-001).
+        let start = Clock.Continuous.now
+        var remaining = timeout
         while true {
             do throws(Error_Primitives.Error) {
-                return try ISO_9945.Kernel.Poll.poll(&entries, timeout: timeout)
+                return try ISO_9945.Kernel.Poll.poll(&entries, timeout: remaining)
             } catch  where error.code.isInterrupted {
-                continue  // Retry on EINTR
+                let elapsedMilliseconds =
+                    (Clock.Continuous.now.nanoseconds - start.nanoseconds) / 1_000_000
+                guard elapsedMilliseconds < UInt64(timeout) else {
+                    return 0  // Deadline elapsed during EINTR retry: timeout.
+                }
+                remaining = timeout - Int32(elapsedMilliseconds)
             }
         }
     }

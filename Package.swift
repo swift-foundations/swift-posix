@@ -130,6 +130,7 @@ let package = Package(
             name: "POSIX Kernel Poll",
             dependencies: [
                 "POSIX Core",
+                "POSIX Kernel Clock",
                 "POSIX Kernel Descriptor",
                 .product(name: "ISO 9945 Kernel Poll", package: "swift-iso-9945"),
             ]
