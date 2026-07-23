@@ -25,6 +25,7 @@ let package = Package(
         .library(name: "POSIX Kernel Lock", targets: ["POSIX Kernel Lock"]),
         .library(name: "POSIX Kernel Poll", targets: ["POSIX Kernel Poll"]),
         .library(name: "POSIX Kernel Socket", targets: ["POSIX Kernel Socket"]),
+        .library(name: "POSIX Kernel Socket Address", targets: ["POSIX Kernel Socket Address"]),
         .library(name: "POSIX Kernel Memory", targets: ["POSIX Kernel Memory"]),
         .library(name: "POSIX Kernel Signal", targets: ["POSIX Kernel Signal"]),
         .library(name: "POSIX Kernel Process", targets: ["POSIX Kernel Process"]),
@@ -144,6 +145,16 @@ let package = Package(
                 "POSIX Core",
                 .product(name: "ISO 9945 Kernel Socket", package: "swift-iso-9945"),
                 .product(name: "ISO 9945 Kernel Poll", package: "swift-iso-9945"),
+            ]
+        ),
+
+        // MARK: - Socket Address (re-export slot per [PLAT-ARCH-030])
+
+        .target(
+            name: "POSIX Kernel Socket Address",
+            dependencies: [
+                "POSIX Core",
+                .product(name: "ISO 9945 Kernel Socket Address", package: "swift-iso-9945"),
             ]
         ),
 
@@ -277,6 +288,7 @@ let package = Package(
                 "POSIX Kernel Lock",
                 "POSIX Kernel Poll",
                 "POSIX Kernel Socket",
+                "POSIX Kernel Socket Address",
                 "POSIX Kernel Memory",
                 "POSIX Kernel Signal",
                 "POSIX Kernel Process",

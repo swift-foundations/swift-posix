@@ -12,6 +12,7 @@
 @_exported public import POSIX_Kernel_Process
 @_exported public import POSIX_Kernel_Signal
 @_exported public import POSIX_Kernel_Socket
+@_exported public import POSIX_Kernel_Socket_Address
 @_exported public import POSIX_Kernel_System
 @_exported public import POSIX_Kernel_Terminal
 @_exported public import POSIX_Kernel_Thread
