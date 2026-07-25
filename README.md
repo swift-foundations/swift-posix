@@ -112,6 +112,37 @@ case .parent(let child):
 
 ---
 
+## Error Handling
+
+`POSIX.Kernel.Close` declares this package's own typed error, `POSIX.Kernel.Close.Error`, an `Equatable` enum wrapping the two failure modes of closing a descriptor:
+
+```
+POSIX.Kernel.Close.Error
+├── handle(POSIX.Kernel.Descriptor.Validity.Error)   // descriptor was not a valid open handle
+└── platform(Error_Primitives.Error)                 // underlying close(2) errno
+```
+
+Because it is declared with typed throws, the do/catch is exhaustive with no default branch:
+
+```swift
+do throws(POSIX.Kernel.Close.Error) {
+    try POSIX.Kernel.Close.close(descriptor)
+} catch {
+    switch error {
+    case .handle(let validity):
+        // descriptor did not refer to a valid open handle
+        print("invalid descriptor: \(validity)")
+    case .platform(let posixError):
+        // close(2) reported an errno
+        print("close failed: \(posixError)")
+    }
+}
+```
+
+Most other operations in this package surface the lower-layer typed errors they wrap — `ISO_9945.Kernel.Process.Error`, `ISO_9945.Kernel.Signal.Error`, `ISO_9945.Kernel.File.Flush.Error`, `Memory.Lock.Error`, `ISO_9945.Loader.Error`, and `Error_Primitives.Error` among them — each of which is likewise exhaustively matchable.
+
+---
+
 ## Related Packages
 
 ### Dependencies
