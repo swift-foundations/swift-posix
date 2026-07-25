@@ -1,0 +1,24 @@
+version: 1
+builder:
+  configs:
+  - documentation_targets:
+    - POSIX Kernel
+    - POSIX Kernel Descriptor
+    - POSIX Kernel File
+    - POSIX Kernel Directory
+    - POSIX Kernel Lock
+    - POSIX Kernel Poll
+    - POSIX Kernel Socket
+    - POSIX Kernel Socket Address
+    - POSIX Kernel Memory
+    - POSIX Kernel Signal
+    - POSIX Kernel Process
+    - POSIX Kernel Thread
+    - POSIX Kernel Terminal
+    - POSIX Kernel Environment
+    - POSIX Kernel System
+    - POSIX Kernel Glob
+    - POSIX Kernel Clock
+    - POSIX Kernel Time
+    - POSIX Kernel Identity
+    - POSIX Loader
