@@ -194,11 +194,17 @@ extension Glob {
                             // as no match, matching this scope's existing convention of
                             // degrading conversion failures to "no matches" rather than
                             // propagating through Path.scope's non-throwing body closure.
-                            (try? ISO_9945.Glob.fnmatch(
-                                pattern: segmentView,
-                                name: name,
-                                options: fnmatchFlags
-                            )) ?? false
+                            {
+                                do throws(ISO_9945.Glob.Fnmatch.Error) {
+                                    return try ISO_9945.Glob.fnmatch(
+                                        pattern: segmentView,
+                                        name: name,
+                                        options: fnmatchFlags
+                                    )
+                                } catch {
+                                    return false
+                                }
+                            }()
                         }
                     }
                 }
