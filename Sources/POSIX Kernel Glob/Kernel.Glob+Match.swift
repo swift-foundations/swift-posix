@@ -189,11 +189,13 @@ extension Glob {
                 matchedEntries = try Path.scope(segmentStrings[segmentIndex]) { segmentView in
                     entries.filter { entry in
                         if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
-                        return ISO_9945.Glob.fnmatch(
-                            pattern: segmentView,
-                            name: entry.name,
-                            options: fnmatchFlags
-                        )
+                        return entry.withName { name in
+                            ISO_9945.Glob.fnmatch(
+                                pattern: segmentView,
+                                name: name,
+                                options: fnmatchFlags
+                            )
+                        }
                     }
                 }
             } catch {
@@ -268,10 +270,10 @@ extension Glob {
         options: Options,
         forDoubleStar: Bool
     ) -> Bool {
-        let name = entry.name
-        guard name.count > 0,
-            unsafe name.pointer[0] == ASCII.Character.Graphic.period
-        else { return false }
+        let startsWithPeriod = entry.withName { name in
+            name.count > 0 && unsafe name.pointer[0] == ASCII.Character.Graphic.period
+        }
+        guard startsWithPeriod else { return false }
         guard !entry.isDotOrDotDot else { return false }
 
         switch options.dotfiles {
@@ -293,7 +295,7 @@ extension Glob {
     /// Lists directory entries via L2 `ISO_9945.Kernel.Directory.Stream`.
     ///
     /// Returns raw `ISO_9945.Kernel.Directory.Entry` values — callers use `rawName`
-    /// for path construction and `name` only when pattern matching requires it.
+    /// for path construction and `withName(_:)` only when pattern matching requires it.
     private static func listDirectory(
         _ path: borrowing Path.Borrowed,
         options: Options
@@ -358,23 +360,25 @@ extension Glob {
         _ entry: ISO_9945.Kernel.Directory.Entry
     ) -> Path {
         let baseView = base.view
-        let name = entry.name
-        let nameCount = name.count
         let needsSep = unsafe baseView.count > 0 && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
         let sepSize = needsSep ? 1 : 0
-        let totalCount = baseView.count + sepSize + nameCount
 
-        let buffer = UnsafeMutablePointer<Path.Char>.allocate(capacity: totalCount + 1)
-        unsafe buffer.initialize(from: baseView.pointer, count: baseView.count)
-        var offset = baseView.count
-        if needsSep {
-            unsafe buffer[offset] = ASCII.Character.Graphic.slant
-            offset += 1
+        return entry.withName { name in
+            let nameCount = name.count
+            let totalCount = baseView.count + sepSize + nameCount
+
+            let buffer = UnsafeMutablePointer<Path.Char>.allocate(capacity: totalCount + 1)
+            unsafe buffer.initialize(from: baseView.pointer, count: baseView.count)
+            var offset = baseView.count
+            if needsSep {
+                unsafe buffer[offset] = ASCII.Character.Graphic.slant
+                offset += 1
+            }
+            unsafe buffer.advanced(by: offset).initialize(from: name.pointer, count: nameCount)
+            unsafe buffer[totalCount] = 0
+
+            return unsafe Path(adopting: buffer, count: totalCount)
         }
-        unsafe buffer.advanced(by: offset).initialize(from: name.pointer, count: nameCount)
-        unsafe buffer[totalCount] = 0
-
-        return unsafe Path(adopting: buffer, count: totalCount)
     }
 
     /// Appends literal bytes to a path.
@@ -432,6 +436,9 @@ extension Glob.Error {
 
         case .io, .platform:
             self = .io(path: path, category: .read)
+
+        case .closed:
+            self = .io(path: path, category: .other)
         }
     }
 }
