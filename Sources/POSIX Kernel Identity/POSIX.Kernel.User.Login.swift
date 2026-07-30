@@ -28,7 +28,7 @@ extension POSIX.Kernel.User.Login {
     ///
     /// - Returns: The login name, or `nil` if not available.
     @inlinable
-    public static func name() -> String? {
-        ISO_9945.Kernel.User.Login.name()
+    public static func name() throws(ISO_9945.Kernel.User.Login.Error) -> String? {
+        try ISO_9945.Kernel.User.Login.name()
     }
 }

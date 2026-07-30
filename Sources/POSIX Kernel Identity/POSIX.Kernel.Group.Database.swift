@@ -42,8 +42,8 @@ extension POSIX.Kernel.Group.Database {
     /// - Parameter name: The group name to look up.
     /// - Returns: The matching entry, or `nil` if not found.
     @inlinable
-    public static func find(name: String) -> ISO_9945.Kernel.Group.Database.Entry? {
-        ISO_9945.Kernel.Group.Database.find(name: name)
+    public static func find(name: String) throws(ISO_9945.Kernel.Group.Database.Error) -> ISO_9945.Kernel.Group.Database.Entry? {
+        try ISO_9945.Kernel.Group.Database.find(name: name)
     }
 
     /// Looks up a group database entry by group ID.
@@ -53,7 +53,7 @@ extension POSIX.Kernel.Group.Database {
     /// - Parameter gid: The group ID to look up.
     /// - Returns: The matching entry, or `nil` if not found.
     @inlinable
-    public static func find(gid: ISO_9945.Kernel.Group.ID) -> ISO_9945.Kernel.Group.Database.Entry? {
-        ISO_9945.Kernel.Group.Database.find(gid: gid)
+    public static func find(gid: ISO_9945.Kernel.Group.ID) throws(ISO_9945.Kernel.Group.Database.Error) -> ISO_9945.Kernel.Group.Database.Entry? {
+        try ISO_9945.Kernel.Group.Database.find(gid: gid)
     }
 }
