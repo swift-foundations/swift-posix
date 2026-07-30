@@ -151,7 +151,8 @@
             var poller: pthread_t?
             #if canImport(Darwin)
                 pthread_create(
-                    &poller, nil,
+                    &poller,
+                    nil,
                     { raw in
                         pollThreadBody(
                             Unmanaged<PollRunContext>
@@ -165,7 +166,8 @@
             #else
                 var pollerThread = pthread_t()
                 pthread_create(
-                    &pollerThread, nil,
+                    &pollerThread,
+                    nil,
                     { raw in
                         pollThreadBody(
                             Unmanaged<PollRunContext>
@@ -185,7 +187,8 @@
             var interrupter: pthread_t?
             #if canImport(Darwin)
                 pthread_create(
-                    &interrupter, nil,
+                    &interrupter,
+                    nil,
                     { raw in
                         interrupterThreadBody(
                             Unmanaged<PollInterrupterContext>
@@ -198,7 +201,8 @@
             #else
                 var interrupterHandle = pthread_t()
                 pthread_create(
-                    &interrupterHandle, nil,
+                    &interrupterHandle,
+                    nil,
                     { raw in
                         interrupterThreadBody(
                             Unmanaged<PollInterrupterContext>
