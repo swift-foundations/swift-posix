@@ -190,11 +190,15 @@ extension Glob {
                     entries.filter { entry in
                         if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
                         return entry.withName { name in
-                            ISO_9945.Glob.fnmatch(
+                            // fnmatch failure (e.g. malformed pattern bytes) is treated
+                            // as no match, matching this scope's existing convention of
+                            // degrading conversion failures to "no matches" rather than
+                            // propagating through Path.scope's non-throwing body closure.
+                            (try? ISO_9945.Glob.fnmatch(
                                 pattern: segmentView,
                                 name: name,
                                 options: fnmatchFlags
-                            )
+                            )) ?? false
                         }
                     }
                 }
@@ -271,7 +275,8 @@ extension Glob {
         forDoubleStar: Bool
     ) -> Bool {
         let startsWithPeriod = entry.withName { name in
-            name.count > 0 && unsafe name.pointer[0] == ASCII.Character.Graphic.period
+            guard name.count > 0 else { return false }
+            return unsafe name.pointer[0] == ASCII.Character.Graphic.period
         }
         guard startsWithPeriod else { return false }
         guard !entry.isDotOrDotDot else { return false }
@@ -363,7 +368,11 @@ extension Glob {
         let needsSep = unsafe baseView.count > 0 && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
         let sepSize = needsSep ? 1 : 0
 
-        return entry.withName { name in
+        // `Path` is `~Copyable`, but `withName`'s closure result type `R` is
+        // implicitly `Copyable` — so the buffer is built inside the closure
+        // (where `name`'s pointer is valid) and only adopted into a `Path`
+        // once control returns to this `Copyable`-only boundary.
+        let (buffer, totalCount): (UnsafeMutablePointer<Path.Char>, Int) = unsafe entry.withName { name in
             let nameCount = name.count
             let totalCount = baseView.count + sepSize + nameCount
 
@@ -377,8 +386,10 @@ extension Glob {
             unsafe buffer.advanced(by: offset).initialize(from: name.pointer, count: nameCount)
             unsafe buffer[totalCount] = 0
 
-            return unsafe Path(adopting: buffer, count: totalCount)
+            return unsafe (buffer, totalCount)
         }
+
+        return unsafe Path(adopting: buffer, count: totalCount)
     }
 
     /// Appends literal bytes to a path.
