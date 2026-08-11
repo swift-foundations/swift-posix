@@ -49,6 +49,44 @@ extension POSIX.Kernel.Socket {
 // not L2 spec-literal, so its canonical home is swift-posix.
 
 extension POSIX.Kernel.Socket.Connect {
+    /// Starts a connection without taking ownership of readiness or cancellation.
+    ///
+    /// A result of ``Start/pending`` means the caller must wait for the
+    /// descriptor to become writable and then call ``finish(_:)``. Writability
+    /// alone does not establish that the connection succeeded.
+    ///
+    /// - Returns: ``Start/connected`` if the connection completed immediately,
+    ///   otherwise ``Start/pending`` if it continues asynchronously.
+    /// - Throws: ``Kernel/Socket/Error`` when the attempt fails synchronously.
+    public static func start(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
+        address: ISO_9945.Kernel.Socket.Address.Storage,
+        length: ISO_9945.Kernel.Socket.Address.Length
+    ) throws(ISO_9945.Kernel.Socket.Error) -> Start {
+        do throws(ISO_9945.Kernel.Socket.Error) {
+            try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address, length: length)
+            return .connected
+        } catch where error.code.isInProgress || error.code.isInterrupted {
+            return .pending
+        }
+    }
+
+    /// Finishes a pending reactive connection attempt after readiness.
+    ///
+    /// This operation reads and clears the descriptor's pending socket error.
+    /// It succeeds only when that error is zero.
+    ///
+    /// - Throws: ``Kernel/Socket/Error`` if reading the pending error fails or
+    ///   if the connection completed with an error.
+    public static func finish(
+        _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
+    ) throws(ISO_9945.Kernel.Socket.Error) {
+        let code = try ISO_9945.Kernel.Socket.getError(descriptor)
+        guard code == .posix(0) else {
+            throw ISO_9945.Kernel.Socket.Error(code: code)
+        }
+    }
+
     /// Waits for an in-progress connection to complete via poll + SO_ERROR.
     ///
     /// Called after `connect()` returns EINTR or EINPROGRESS. Blocks until
