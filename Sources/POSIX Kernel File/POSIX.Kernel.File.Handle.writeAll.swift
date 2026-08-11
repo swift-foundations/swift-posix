@@ -28,7 +28,7 @@ internal import ISO_9945_Kernel_File
 //
 // Split-legibility aids per Doc 1 Decision #3:
 // - iso-9945 Research note: `file-handle-writeall-l2-l3-split-rationale.md`
-// - swift-posix cascade paragraph: `Research/l3-policy-design.md`
+// - swift-posix [cascade paragraph](https://github.com/swift-institute/Research/blob/main/Packages/swift-posix/l3-policy-design.md)
 // - DocC See-Also in iso-9945 `ISO 9945.Kernel.File.Handle.write.swift`
 //   pointing here (landed in Phase 2b).
 
