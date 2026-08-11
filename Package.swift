@@ -58,7 +58,10 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-loader-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-glob-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-iso/swift-iso-9945.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-iso/swift-iso-9945.git",
+            revision: "00ab4956fd6e8e20798684150e990bab39d27e08"
+        ),
     ],
     targets: [
         // MARK: - Core (internal — not a published product)

@@ -131,6 +131,31 @@ extension POSIX.Kernel.IO.Read {
 // MARK: - Span Adapters
 
 extension POSIX.Kernel.IO.Read {
+    /// Reads bytes from a file descriptor into an output span, automatically retrying on EINTR.
+    ///
+    /// Each attempt delegates frontier management to the ISO 9945 producer. An interrupted
+    /// attempt therefore leaves the initialized prefix unchanged; a successful attempt commits
+    /// its returned count exactly once.
+    ///
+    /// - Parameters:
+    ///   - descriptor: The file descriptor to read from.
+    ///   - output: The output span whose uninitialized tail receives the bytes.
+    /// - Returns: Number of bytes read. Returns 0 on EOF.
+    /// - Throws: `ISO_9945.Kernel.IO.Read.Error` on non-interruption failure.
+    @inlinable
+    public static func read(
+        _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
+        into output: inout Swift.OutputSpan<Byte>
+    ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
+        while true {
+            do throws(ISO_9945.Kernel.IO.Read.Error) {
+                return try ISO_9945.Kernel.IO.Read.read(descriptor, into: &output)
+            } catch where error.code.isInterrupted {
+                continue
+            }
+        }
+    }
+
     /// Reads bytes from a file descriptor into a mutable span, automatically retrying on EINTR.
     ///
     /// - Parameters:
