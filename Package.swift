@@ -60,7 +60,7 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
         .package(
             url: "https://github.com/swift-iso/swift-iso-9945.git",
-            revision: "00ab4956fd6e8e20798684150e990bab39d27e08"
+            revision: "a877b6d48cd461c50b909821c0b2b1d0898176b2"
         ),
     ],
     targets: [
