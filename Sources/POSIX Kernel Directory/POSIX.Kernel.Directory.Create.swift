@@ -49,7 +49,9 @@ extension POSIX.Kernel.Directory.Create {
     @inlinable
     public static func create(
         _ path: borrowing Path.Borrowed,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) throws(ISO_9945.Kernel.Directory.Create.Error) {
         try ISO_9945.Kernel.Directory.Create.create(path, permissions: permissions)
     }
@@ -69,8 +71,14 @@ extension POSIX.Kernel.Directory.Create {
     public static func create(
         _ path: borrowing Path.Borrowed,
         relativeTo descriptor: borrowing ISO_9945.Kernel.Descriptor,
-        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(rawValue: 0o755)
+        permissions: ISO_9945.Kernel.File.Permissions = ISO_9945.Kernel.File.Permissions(
+            rawValue: 0o755
+        )
     ) throws(ISO_9945.Kernel.Directory.Create.Error) {
-        try ISO_9945.Kernel.Directory.Create.create(path, relativeTo: descriptor, permissions: permissions)
+        try ISO_9945.Kernel.Directory.Create.create(
+            path,
+            relativeTo: descriptor,
+            permissions: permissions
+        )
     }
 }

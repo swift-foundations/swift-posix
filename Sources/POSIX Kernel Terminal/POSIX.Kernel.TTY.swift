@@ -79,7 +79,9 @@
         /// - Parameter descriptor: The descriptor to query.
         /// - Returns: Terminal size in rows and columns.
         /// - Throws: ``Error_Primitives.Error`` if the ioctl call fails, such as when the descriptor is not a terminal.
-        public static func query(_ descriptor: borrowing POSIX.Kernel.Descriptor) throws(Error_Primitives.Error) -> ISO_9945.Kernel.TTY.Size {
+        public static func query(
+            _ descriptor: borrowing POSIX.Kernel.Descriptor
+        ) throws(Error_Primitives.Error) -> ISO_9945.Kernel.TTY.Size {
             try ISO_9945.Kernel.TTY.Size.query(descriptor)
         }
     }

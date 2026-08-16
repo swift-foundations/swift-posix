@@ -73,7 +73,14 @@ extension ISO_9945.Kernel.File.Handle {
             }
             if n == 0 {
                 // Should not happen for regular files, but handle gracefully.
-                throw .left(Self.Error(from: ISO_9945.Kernel.IO.Write.Error.platform(Error_Primitives.Error(code: .POSIX.EIO)), operation: .write))
+                throw .left(
+                    Self.Error(
+                        from: ISO_9945.Kernel.IO.Write.Error.platform(
+                            Error_Primitives.Error(code: .POSIX.EIO)
+                        ),
+                        operation: .write
+                    )
+                )
             }
             written += n
         }

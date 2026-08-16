@@ -45,7 +45,9 @@ extension POSIX.Kernel.Process.Fork {
     /// `fork()` is unsafe in multithreaded programs. Only async-signal-safe
     /// functions may be called between `fork()` and `exec()` in the child.
     @inlinable
-    public static func fork() throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.Fork.Result {
+    public static func fork() throws(ISO_9945.Kernel.Process.Error)
+        -> ISO_9945.Kernel.Process.Fork.Result
+    {
         try ISO_9945.Kernel.Process.Fork.fork()
     }
 }

@@ -412,12 +412,17 @@
                 )
 
                 #expect(results.contains(mainFile), "Main.swift outside .docc must be included")
-                #expect(!results.contains(stepFile), "step-01-imports.swift inside `Foo Module.docc/Resources` must be excluded by **/*.docc/**")
+                #expect(
+                    !results.contains(stepFile),
+                    "step-01-imports.swift inside `Foo Module.docc/Resources` must be excluded by **/*.docc/**"
+                )
             }
         }
 
         @Test
-        func `Exclude pattern with trailing doublestar excludes files inside (no space control)`() throws {
+        func `Exclude pattern with trailing doublestar excludes files inside (no space control)`()
+            throws
+        {
             // Control variant of the spaces test — same shape but the parent dir
             // name has NO space. If this also fails, the bug is doubleStar
             // ignoring files; if only the space variant fails, the bug is in
@@ -440,7 +445,10 @@
                     in: dir
                 )
 
-                #expect(!results.contains(stepFile), "step-01-imports.swift inside `Foo.docc/Resources` must be excluded by **/*.docc/**")
+                #expect(
+                    !results.contains(stepFile),
+                    "step-01-imports.swift inside `Foo.docc/Resources` must be excluded by **/*.docc/**"
+                )
             }
         }
 

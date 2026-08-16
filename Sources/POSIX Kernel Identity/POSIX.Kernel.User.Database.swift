@@ -42,7 +42,9 @@ extension POSIX.Kernel.User.Database {
     /// - Parameter name: The user name to look up.
     /// - Returns: The matching entry, or `nil` if not found.
     @inlinable
-    public static func find(name: String) throws(ISO_9945.Kernel.User.Database.Error) -> ISO_9945.Kernel.User.Database.Entry? {
+    public static func find(
+        name: String
+    ) throws(ISO_9945.Kernel.User.Database.Error) -> ISO_9945.Kernel.User.Database.Entry? {
         try ISO_9945.Kernel.User.Database.find(name: name)
     }
 
@@ -53,7 +55,9 @@ extension POSIX.Kernel.User.Database {
     /// - Parameter uid: The user ID to look up.
     /// - Returns: The matching entry, or `nil` if not found.
     @inlinable
-    public static func find(uid: ISO_9945.Kernel.User.ID) throws(ISO_9945.Kernel.User.Database.Error) -> ISO_9945.Kernel.User.Database.Entry? {
+    public static func find(
+        uid: ISO_9945.Kernel.User.ID
+    ) throws(ISO_9945.Kernel.User.Database.Error) -> ISO_9945.Kernel.User.Database.Entry? {
         try ISO_9945.Kernel.User.Database.find(uid: uid)
     }
 }

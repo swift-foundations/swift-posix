@@ -45,7 +45,11 @@ extension POSIX.Kernel.Socket.Send {
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
-                return try ISO_9945.Kernel.Socket.Send.send(descriptor, from: span, options: options)
+                return try ISO_9945.Kernel.Socket.Send.send(
+                    descriptor,
+                    from: span,
+                    options: options
+                )
             } catch  where error.code.isInterrupted {
                 continue
             }
@@ -71,7 +75,13 @@ extension POSIX.Kernel.Socket.Send {
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
-                return try ISO_9945.Kernel.Socket.Send.to(descriptor, from: span, options: options, address: address, addressLength: addressLength)
+                return try ISO_9945.Kernel.Socket.Send.to(
+                    descriptor,
+                    from: span,
+                    options: options,
+                    address: address,
+                    addressLength: addressLength
+                )
             } catch  where error.code.isInterrupted {
                 continue
             }
@@ -94,7 +104,11 @@ extension POSIX.Kernel.Socket.Send {
     ) throws(ISO_9945.Kernel.Socket.Error) -> Int {
         while true {
             do throws(ISO_9945.Kernel.Socket.Error) {
-                return try ISO_9945.Kernel.Socket.Send.message(descriptor, header: &header, options: options)
+                return try ISO_9945.Kernel.Socket.Send.message(
+                    descriptor,
+                    header: &header,
+                    options: options
+                )
             } catch  where error.code.isInterrupted {
                 continue
             }
