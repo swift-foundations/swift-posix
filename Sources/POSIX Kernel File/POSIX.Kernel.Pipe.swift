@@ -46,7 +46,8 @@ extension POSIX.Kernel.Pipe {
     /// - Returns: The read and write descriptors for the pipe.
     /// - Throws: ``ISO_9945/Kernel/Pipe/Error`` on failure (excluding EINTR).
     @inlinable
-    public static func pipe() throws(ISO_9945.Kernel.Pipe.Error) -> ISO_9945.Kernel.Pipe.Descriptors {
+    public static func pipe() throws(ISO_9945.Kernel.Pipe.Error) -> ISO_9945.Kernel.Pipe.Descriptors
+    {
         while true {
             do throws(ISO_9945.Kernel.Pipe.Error) {
                 return try ISO_9945.Kernel.Pipe.pipe()

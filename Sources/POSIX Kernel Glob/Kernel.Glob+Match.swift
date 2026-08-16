@@ -128,7 +128,9 @@ extension Glob {
         options: Options = .init()
     ) throws(Error) -> [Swift.String] {
         var results: [Swift.String] = []
-        try match(include: include, excluding: excluding, in: directory, options: options) { results.append($0) }
+        try match(include: include, excluding: excluding, in: directory, options: options) {
+            results.append($0)
+        }
         return results
     }
 }
@@ -152,7 +154,13 @@ extension Glob {
 
         guard segmentIndex < segments.count else {
             // Yield matched path as Swift.String for Copyable collection/sorting
-            body(unsafe Swift.String(cString: UnsafeRawPointer(currentPath.view.pointer).assumingMemoryBound(to: CChar.self)))
+            body(
+                unsafe Swift.String(
+                    cString: UnsafeRawPointer(currentPath.view.pointer).assumingMemoryBound(
+                        to: CChar.self
+                    )
+                )
+            )
             return
         }
 
@@ -188,7 +196,9 @@ extension Glob {
             do throws(Path.String.Conversion.Error) {
                 matchedEntries = try Path.scope(segmentStrings[segmentIndex]) { segmentView in
                     entries.filter { entry in
-                        if shouldSkipEntry(entry, options: options, forDoubleStar: false) { return false }
+                        if shouldSkipEntry(entry, options: options, forDoubleStar: false) {
+                            return false
+                        }
                         return entry.withName { name in
                             // fnmatch failure (e.g. malformed pattern bytes) is treated
                             // as no match, matching this scope's existing convention of
@@ -266,7 +276,13 @@ extension Glob {
                         body: body
                     )
                 } else if isTerminalDoubleStar {
-                    body(unsafe Swift.String(cString: UnsafeRawPointer(nextPath.view.pointer).assumingMemoryBound(to: CChar.self)))
+                    body(
+                        unsafe Swift.String(
+                            cString: UnsafeRawPointer(nextPath.view.pointer).assumingMemoryBound(
+                                to: CChar.self
+                            )
+                        )
+                    )
                 }
             }
         }
@@ -371,14 +387,17 @@ extension Glob {
         _ entry: ISO_9945.Kernel.Directory.Entry
     ) -> Path {
         let baseView = base.view
-        let needsSep = unsafe baseView.count > 0 && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
+        let needsSep =
+            unsafe baseView.count > 0
+            && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
         let sepSize = needsSep ? 1 : 0
 
         // `Path` is `~Copyable`, but `withName`'s closure result type `R` is
         // implicitly `Copyable` — so the buffer is built inside the closure
         // (where `name`'s pointer is valid) and only adopted into a `Path`
         // once control returns to this `Copyable`-only boundary.
-        let (buffer, totalCount): (UnsafeMutablePointer<Path.Char>, Int) = unsafe entry.withName { name in
+        let (buffer, totalCount): (UnsafeMutablePointer<Path.Char>, Int) = unsafe entry.withName {
+            name in
             let nameCount = name.count
             let totalCount = baseView.count + sepSize + nameCount
 
@@ -407,7 +426,9 @@ extension Glob {
         _ component: [UInt8]
     ) -> Path {
         let baseView = base.view
-        let needsSep = unsafe baseView.count > 0 && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
+        let needsSep =
+            unsafe baseView.count > 0
+            && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
         let sepSize = needsSep ? 1 : 0
         let totalCount = baseView.count + sepSize + component.count
 
@@ -432,7 +453,9 @@ extension Glob {
 extension Glob.Error {
     /// Maps L2 directory errors to L1 glob errors.
     init(from error: ISO_9945.Kernel.Directory.Error, pathView: borrowing Path.Borrowed) {
-        let path = unsafe Swift.String(cString: UnsafeRawPointer(pathView.pointer).assumingMemoryBound(to: CChar.self))
+        let path = unsafe Swift.String(
+            cString: UnsafeRawPointer(pathView.pointer).assumingMemoryBound(to: CChar.self)
+        )
         self.init(from: error, path: path)
     }
 

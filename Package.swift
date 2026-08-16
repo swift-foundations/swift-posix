@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v26),
         .tvOS(.v26),
         .watchOS(.v26),
-        .visionOS(.v26)
+        .visionOS(.v26),
     ],
     products: [
         // MARK: - Kernel (umbrella)
@@ -51,13 +51,34 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-equation-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-hash-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-error-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-path-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-loader-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-glob-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-either-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-equation-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-hash-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-error-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-path-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-loader-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-glob-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            branch: "main"
+        ),
         .package(url: "https://github.com/swift-iso/swift-iso-9945.git", branch: "main"),
     ],
     targets: [

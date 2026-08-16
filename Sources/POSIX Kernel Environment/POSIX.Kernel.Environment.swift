@@ -133,7 +133,9 @@ extension POSIX.Kernel.Environment {
     /// - Parameter name: Pointer to null-terminated variable name.
     /// - Throws: ``ISO_9945/Kernel/Environment/Error`` on failure.
     @inlinable
-    public static func unset(_ name: UnsafePointer<String.Char>) throws(ISO_9945.Kernel.Environment.Error) {
+    public static func unset(
+        _ name: UnsafePointer<String.Char>
+    ) throws(ISO_9945.Kernel.Environment.Error) {
         try unsafe ISO_9945.Kernel.Environment.unset(name)
     }
 }

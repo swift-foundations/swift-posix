@@ -63,7 +63,9 @@
         /// - Parameter descriptor: The descriptor (must refer to a terminal).
         /// - Returns: Current terminal attributes.
         /// - Throws: ``Error_Primitives.Error`` if the syscall fails.
-        public static func get(_ descriptor: borrowing POSIX.Kernel.Descriptor) throws(Error_Primitives.Error) -> ISO_9945.Kernel.Termios.Attributes {
+        public static func get(
+            _ descriptor: borrowing POSIX.Kernel.Descriptor
+        ) throws(Error_Primitives.Error) -> ISO_9945.Kernel.Termios.Attributes {
             try ISO_9945.Kernel.Termios.Attributes.get(descriptor)
         }
     }

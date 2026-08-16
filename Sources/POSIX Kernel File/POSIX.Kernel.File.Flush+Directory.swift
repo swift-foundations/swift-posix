@@ -33,7 +33,9 @@ extension POSIX.Kernel.File.Flush {
     ///   flatten to `.platform(_:)` with a canonical POSIX code (`ENOENT`,
     ///   `EACCES`, `ENOSPC`).
     @inlinable
-    public static func directory(path: borrowing Path.Borrowed) throws(ISO_9945.Kernel.File.Flush.Error) {
+    public static func directory(
+        path: borrowing Path.Borrowed
+    ) throws(ISO_9945.Kernel.File.Flush.Error) {
         let fd: ISO_9945.Kernel.Descriptor
         do throws(ISO_9945.Kernel.File.Open.Error) {
             fd = try _openForDirectoryFlush(path: path)

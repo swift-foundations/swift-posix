@@ -42,7 +42,9 @@ extension POSIX.Kernel.Process.Session {
     /// - Returns: The new session ID.
     /// - Throws: ``ISO_9945/Kernel/Process/Error`` on failure.
     @inlinable
-    public static func create() throws(ISO_9945.Kernel.Process.Error) -> ISO_9945.Kernel.Process.Session.ID {
+    public static func create() throws(ISO_9945.Kernel.Process.Error)
+        -> ISO_9945.Kernel.Process.Session.ID
+    {
         try ISO_9945.Kernel.Process.Session.create()
     }
 

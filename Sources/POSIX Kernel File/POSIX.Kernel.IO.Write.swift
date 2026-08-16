@@ -95,7 +95,11 @@ extension POSIX.Kernel.IO.Write {
     ) throws(ISO_9945.Kernel.IO.Write.Error) -> Int {
         while true {
             do throws(ISO_9945.Kernel.IO.Write.Error) {
-                return unsafe try ISO_9945.Kernel.IO.Write.pwrite(descriptor, from: buffer, at: offset)
+                return unsafe try ISO_9945.Kernel.IO.Write.pwrite(
+                    descriptor,
+                    from: buffer,
+                    at: offset
+                )
             } catch  where error.code.isInterrupted {
                 continue  // Retry on EINTR
             }
