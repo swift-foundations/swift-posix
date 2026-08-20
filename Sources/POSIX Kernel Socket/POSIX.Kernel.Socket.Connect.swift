@@ -66,7 +66,7 @@ extension POSIX.Kernel.Socket.Connect {
         do throws(ISO_9945.Kernel.Socket.Error) {
             try ISO_9945.Kernel.Socket.Connect.connect(descriptor, address: address, length: length)
             return .connected
-        } catch where error.code.isInProgress || error.code.isInterrupted {
+        } catch  where error.code.isInProgress || error.code.isInterrupted {
             return .pending
         }
     }

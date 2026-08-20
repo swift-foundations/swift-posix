@@ -154,7 +154,7 @@ extension POSIX.Kernel.IO.Read {
         while true {
             do throws(ISO_9945.Kernel.IO.Read.Error) {
                 return try ISO_9945.Kernel.IO.Read.read(descriptor, into: &output)
-            } catch where error.code.isInterrupted {
+            } catch  where error.code.isInterrupted {
                 continue
             }
         }
