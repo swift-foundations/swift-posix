@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import ISO_9945_Kernel_Thread
+import ISO_9945_Kernel_Thread
 
 // MARK: - POSIX Thread namespace
 //

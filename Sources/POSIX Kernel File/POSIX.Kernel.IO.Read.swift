@@ -172,7 +172,7 @@ extension POSIX.Kernel.IO.Read {
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         into span: inout MutableSpan<Byte>
     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
-        try unsafe span.withUnsafeMutableBytes {
+        try span.withUnsafeMutableBytes {
             (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
             unsafe try read(descriptor, into: buffer)
         }
@@ -192,7 +192,7 @@ extension POSIX.Kernel.IO.Read {
         into span: inout MutableSpan<Byte>,
         at offset: ISO_9945.Kernel.File.Offset
     ) throws(ISO_9945.Kernel.IO.Read.Error) -> Int {
-        try unsafe span.withUnsafeMutableBytes {
+        try span.withUnsafeMutableBytes {
             (buffer: UnsafeMutableRawBufferPointer) throws(ISO_9945.Kernel.IO.Read.Error) -> Int in
             unsafe try pread(descriptor, into: buffer, at: offset)
         }

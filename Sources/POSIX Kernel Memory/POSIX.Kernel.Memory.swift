@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import ISO_9945_Kernel_Memory
+import ISO_9945_Kernel_Memory
 
 // MARK: - POSIX Memory namespace
 //

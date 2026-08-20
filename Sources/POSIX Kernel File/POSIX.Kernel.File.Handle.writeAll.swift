@@ -104,7 +104,7 @@ extension ISO_9945.Kernel.File.Handle {
     public borrowing func writeAll(
         from span: Swift.Span<Byte>
     ) throws(Either<Self.Error, Interrupt>) {
-        try unsafe span.withUnsafeBytes {
+        try span.withUnsafeBytes {
             (buffer: UnsafeRawBufferPointer) throws(Either<Self.Error, Interrupt>) in
             try unsafe writeAll(from: buffer)
         }

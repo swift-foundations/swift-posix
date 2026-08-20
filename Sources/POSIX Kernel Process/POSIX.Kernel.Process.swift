@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import ISO_9945_Kernel_Process
+import ISO_9945_Kernel_Process
 
 // MARK: - POSIX Process namespace
 //

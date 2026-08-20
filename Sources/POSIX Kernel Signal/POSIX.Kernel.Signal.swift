@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import ISO_9945_Kernel_Signal
+import ISO_9945_Kernel_Signal
 
 // MARK: - POSIX Signal namespace
 //
