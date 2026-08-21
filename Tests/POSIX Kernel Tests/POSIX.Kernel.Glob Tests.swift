@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-posix open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 #if !os(Windows)
 
     import Testing
@@ -31,9 +20,6 @@
         }
     }
 
-    // MARK: - Test Fixture
-
-    /// Recursively removes a directory and its contents.
     private func removeDirectoryRecursively(_ path: Swift.String) {
         guard let dir = opendir(path) else { return }
         defer { closedir(dir) }
@@ -60,7 +46,6 @@
         rmdir(path)
     }
 
-    /// Gets the parent directory path.
     private func parentDirectory(of path: Swift.String) -> Swift.String {
         var components = path.split(separator: "/", omittingEmptySubsequences: false)
         if components.count > 1 {
@@ -72,7 +57,6 @@
         return components.joined(separator: "/")
     }
 
-    /// Creates a temporary directory structure for glob testing.
     private func withTestDirectory(
         _ body: (Swift.String) throws -> Void
     ) throws {
@@ -90,23 +74,7 @@
         try body(tempDir)
     }
 
-    /// Creates files and directories in the test directory.
     private func createTestFiles(in directory: Swift.String) throws {
-        // Create directory structure:
-        // directory/
-        //   file1.txt
-        //   file2.txt
-        //   file3.md
-        //   .hidden.txt
-        //   src/
-        //     main.swift
-        //     test.swift
-        //     util.swift
-        //   docs/
-        //     readme.md
-        //     guide.md
-        //   .config/
-        //     settings.json
 
         let files = [
             "file1.txt",
@@ -125,18 +93,14 @@
             let fullPath = directory + "/" + file
             let dirPath = parentDirectory(of: fullPath)
 
-            // Create parent directory if needed
             mkdir(dirPath, 0o755)
 
-            // Create file
             let fd = open(fullPath, O_CREAT | O_WRONLY, 0o644)
             if fd >= 0 {
                 close(fd)
             }
         }
     }
-
-    // MARK: - Basic Match Tests
 
     extension Glob.Test.Unit {
         @Test
@@ -208,8 +172,6 @@
         }
     }
 
-    // MARK: - Double Star Tests
-
     extension Glob.Test.Unit {
         @Test
         func `Match double star recursive`() throws {
@@ -242,8 +204,6 @@
         }
     }
 
-    // MARK: - Character Class Tests
-
     extension Glob.Test.Unit {
         @Test
         func `Match character class`() throws {
@@ -260,8 +220,6 @@
         }
     }
 
-    // MARK: - Options Tests
-
     extension Glob.Test.Unit {
         @Test
         func `Dotfiles explicit policy excludes hidden files`() throws {
@@ -272,7 +230,6 @@
                 let options = Glob.Options(dotfiles: .explicit)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Should not include .hidden.txt
                 #expect(results.count == 2)
                 #expect(!results.contains(dir + "/.hidden.txt"))
             }
@@ -287,7 +244,6 @@
                 let options = Glob.Options(dotfiles: .always)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Should include .hidden.txt
                 #expect(results.count == 3)
                 #expect(results.contains(dir + "/.hidden.txt"))
             }
@@ -302,7 +258,6 @@
                 let options = Glob.Options(dotfiles: .never)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Should not match any dotfiles
                 #expect(results.isEmpty)
             }
         }
@@ -316,7 +271,6 @@
                 let options = Glob.Options(dotfiles: .explicit)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Explicit .* should match dotfiles
                 #expect(results.count == 1)
                 #expect(results.contains(dir + "/.hidden.txt"))
             }
@@ -331,7 +285,6 @@
                 let options = Glob.Options(ordering: .deterministic)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Results should be sorted
                 #expect(results == results.sorted())
             }
         }
@@ -339,7 +292,7 @@
         @Test
         func `Case insensitive matching`() throws {
             try withTestDirectory { dir in
-                // Create a file with uppercase
+
                 let upperPath = dir + "/FILE.TXT"
                 let fd = open(upperPath, O_CREAT | O_WRONLY, 0o644)
                 if fd >= 0 { close(fd) }
@@ -348,13 +301,10 @@
                 let options = Glob.Options(caseInsensitive: true)
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
 
-                // Should match FILE.TXT with *.txt
                 #expect(results.contains(upperPath))
             }
         }
     }
-
-    // MARK: - Include/Exclude Tests
 
     extension Glob.Test.Unit {
         @Test
@@ -378,28 +328,18 @@
 
         @Test
         func `Exclude pattern handles directory names containing spaces`() throws {
-            // Reproducer for the workaround at swift-linter/Sources/Linter Core/
-            // Lint.Source.Walker.swift `pathExclusionSubstrings: [".docc/"]`.
-            // Directories like `Carrier Primitives.docc/Resources/step-01.swift`
-            // (DocC tutorial step-files inside a SwiftPM `Sources/<Module>.docc/`
-            // catalog whose name contains a space) MUST be excluded by the
-            // `**/*.docc/**` exclude pattern. Pre-fix behavior: the exclude
-            // matched zero entries when the parent dir name had a space, so
-            // step-files leaked into the include set.
+
             try withTestDirectory { dir in
-                // Create a SwiftPM-like Sources/<Module>/<Module>.docc/Resources/ tree
-                // where the .docc directory's name contains a space.
+
                 let docDir = dir + "/Sources/Foo/Foo Module.docc/Resources"
                 mkdir(dir + "/Sources", 0o755)
                 mkdir(dir + "/Sources/Foo", 0o755)
                 mkdir(dir + "/Sources/Foo/Foo Module.docc", 0o755)
                 mkdir(docDir, 0o755)
 
-                // A regular Swift source (should be included).
                 let mainFile = dir + "/Sources/Foo/Main.swift"
                 close(open(mainFile, O_CREAT | O_WRONLY, 0o644))
 
-                // A docc step-file (should be excluded by **/*.docc/**).
                 let stepFile = docDir + "/step-01-imports.swift"
                 close(open(stepFile, O_CREAT | O_WRONLY, 0o644))
 
@@ -423,10 +363,7 @@
         func `Exclude pattern with trailing doublestar excludes files inside (no space control)`()
             throws
         {
-            // Control variant of the spaces test — same shape but the parent dir
-            // name has NO space. If this also fails, the bug is doubleStar
-            // ignoring files; if only the space variant fails, the bug is in
-            // entry-name handling.
+
             try withTestDirectory { dir in
                 let docDir = dir + "/Sources/Foo/Foo.docc/Resources"
                 mkdir(dir + "/Sources", 0o755)
@@ -471,8 +408,6 @@
         }
     }
 
-    // MARK: - Error Tests
-
     extension Glob.Test.Unit {
         @Test
         func `Match non-existent directory throws notFound`() throws {
@@ -491,7 +426,6 @@
             try withTestDirectory { dir in
                 try createTestFiles(in: dir)
 
-                // Create a directory we can't read
                 let restrictedDir = dir + "/restricted"
                 mkdir(restrictedDir, 0o000)
                 defer { chmod(restrictedDir, 0o755) }
@@ -499,14 +433,11 @@
                 let pattern = try Glob.Pattern("**/*.txt")
                 let options = Glob.Options(onError: .skip)
 
-                // Should not throw, just skip the restricted directory
                 let results = try Glob.match(pattern: pattern, in: dir, options: options)
-                #expect(results.count >= 2)  // At least the root txt files
+                #expect(results.count >= 2)
             }
         }
     }
-
-    // MARK: - Edge Cases
 
     extension Glob.Test.`Edge Case` {
         @Test
@@ -515,7 +446,6 @@
                 let pattern = try Glob.Pattern("")
                 let results = try Glob.match(pattern: pattern, in: dir)
 
-                // Empty pattern matches the directory itself (possibly with trailing /)
                 #expect(results.count == 1)
                 let result = results[0]
                 #expect(result == dir || result == dir + "/")
@@ -530,8 +460,7 @@
                 let pattern = try Glob.Pattern("*")
                 let results = try Glob.match(pattern: pattern, in: dir)
 
-                // Should match all non-hidden files and directories at root
-                #expect(results.count >= 4)  // file1.txt, file2.txt, file3.md, src/, docs/
+                #expect(results.count >= 4)
             }
         }
     }

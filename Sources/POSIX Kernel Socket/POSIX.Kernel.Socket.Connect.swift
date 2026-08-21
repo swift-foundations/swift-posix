@@ -1,63 +1,13 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-posix open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 @_spi(Syscall) public import ISO_9945_Kernel_Poll
 @_spi(Syscall) public import ISO_9945_Kernel_Socket
 
-// MARK: - EINTR-Safe Connect Operation
-
-/// POSIX socket connect with automatic EINTR completion.
-///
-/// Unlike read/write/accept, connect EINTR does NOT mean "retry the call."
-/// When `connect()` returns EINTR, the connection attempt continues
-/// asynchronously. This wrapper detects EINTR and uses poll-based
-/// completion (`poll(POLLOUT)` + `getsockopt(SO_ERROR)`) to await
-/// the result.
-///
-/// ## When to Use
-///
-/// Use this wrapper when you want automatic EINTR handling for blocking
-/// connects. Use the raw `ISO_9945.Kernel.Socket.Connect` when you need to handle
-/// EINTR explicitly or manage non-blocking connect yourself.
-///
-/// ## Example
-///
-/// ```swift
-/// // Policy-aware (handles EINTR via poll):
-/// try POSIX.Kernel.Socket.Connect.connect(socketFd, address: addr)
-///
-/// // Raw syscall (can throw on EINTR):
-/// try ISO_9945.Kernel.Socket.Connect.connect(socketFd, address: addr)
-/// ```
 extension POSIX.Kernel.Socket {
-    /// Connect operations with EINTR completion policy.
+
     public enum Connect {}
 }
 
-// MARK: - Await Completion (poll-based, L3 policy)
-//
-// Relocated from swift-iso-9945's `ISO 9945.Kernel.Socket.Connect.swift`
-// per [PLAT-ARCH-008e]: poll orchestration + EINTR retry is L3 policy,
-// not L2 spec-literal, so its canonical home is swift-posix.
-
 extension POSIX.Kernel.Socket.Connect {
-    /// Starts a connection without taking ownership of readiness or cancellation.
-    ///
-    /// A result of ``Start/pending`` means the caller must wait for the
-    /// descriptor to become writable and then call ``finish(_:)``. Writability
-    /// alone does not establish that the connection succeeded.
-    ///
-    /// - Returns: ``Start/connected`` if the connection completed immediately,
-    ///   otherwise ``Start/pending`` if it continues asynchronously.
-    /// - Throws: ``Kernel/Socket/Error`` when the attempt fails synchronously.
+
     public static func start(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Storage,
@@ -71,13 +21,6 @@ extension POSIX.Kernel.Socket.Connect {
         }
     }
 
-    /// Finishes a pending reactive connection attempt after readiness.
-    ///
-    /// This operation reads and clears the descriptor's pending socket error.
-    /// It succeeds only when that error is zero.
-    ///
-    /// - Throws: ``Kernel/Socket/Error`` if reading the pending error fails or
-    ///   if the connection completed with an error.
     public static func finish(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -87,17 +30,6 @@ extension POSIX.Kernel.Socket.Connect {
         }
     }
 
-    /// Waits for an in-progress connection to complete via poll + SO_ERROR.
-    ///
-    /// Called after `connect()` returns EINTR or EINPROGRESS. Blocks until
-    /// the connection completes or fails.
-    ///
-    /// Per POSIX: when `connect()` is interrupted, the connection attempt
-    /// continues asynchronously. Recovery requires polling for writability,
-    /// then checking the socket error to determine the outcome.
-    ///
-    /// - Parameter descriptor: The socket descriptor with in-progress connection.
-    /// - Throws: `ISO_9945.Kernel.Socket.Error` if the connection failed.
     public static func awaitCompletion(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor
     ) throws(ISO_9945.Kernel.Socket.Error) {
@@ -121,16 +53,8 @@ extension POSIX.Kernel.Socket.Connect {
     }
 }
 
-// MARK: - EINTR-Safe Connect
-
 extension POSIX.Kernel.Socket.Connect {
-    /// Connects a socket, awaiting completion if interrupted by a signal.
-    ///
-    /// - Parameters:
-    ///   - descriptor: The socket descriptor.
-    ///   - address: The peer address, as a `Storage` container.
-    ///   - length: The size of the actual address within storage.
-    /// - Throws: ``Kernel/Socket/Error`` on failure (excluding EINTR).
+
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Storage,
@@ -143,7 +67,6 @@ extension POSIX.Kernel.Socket.Connect {
         }
     }
 
-    /// Connects a socket to an IPv4 address, awaiting completion if interrupted.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv4
@@ -155,7 +78,6 @@ extension POSIX.Kernel.Socket.Connect {
         }
     }
 
-    /// Connects a socket to an IPv6 address, awaiting completion if interrupted.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.IPv6
@@ -167,7 +89,6 @@ extension POSIX.Kernel.Socket.Connect {
         }
     }
 
-    /// Connects a socket to a Unix domain address, awaiting completion if interrupted.
     public static func connect(
         _ descriptor: borrowing ISO_9945.Kernel.Socket.Descriptor,
         address: ISO_9945.Kernel.Socket.Address.Unix

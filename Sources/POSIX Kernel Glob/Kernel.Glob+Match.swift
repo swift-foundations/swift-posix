@@ -1,34 +1,11 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-posix open source project
-//
-// Copyright (c) 2024-2025 Coen ten Thije Boonkkamp and the swift-posix project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Glob_Primitives
 internal import ISO_9945_Glob
 internal import ISO_9945_Kernel_Directory
 @_spi(Syscall) internal import ISO_9945_Kernel_File
 public import Path_Primitives
 
-// MARK: - POSIX Glob Implementation
-
 extension Glob {
-    /// Matches files using a glob pattern, yielding each match to the body closure.
-    ///
-    /// Streams results directly — no intermediate collection. Each matched path
-    /// is yielded as it is found during directory traversal.
-    ///
-    /// - Parameters:
-    ///   - pattern: Compiled glob pattern.
-    ///   - directory: Root directory path for matching.
-    ///   - options: Matching and traversal options.
-    ///   - body: Closure called for each matching path.
-    /// - Throws: `ISO_9945.Kernel.Glob.Error` on failure.
+
     public static func match(
         pattern: Pattern,
         in directory: borrowing Path.Borrowed,
@@ -66,17 +43,6 @@ extension Glob {
         }
     }
 
-    /// Matches files using multiple patterns with exclusions, yielding each match.
-    ///
-    /// Collects internally for deduplication across patterns, then yields results.
-    ///
-    /// - Parameters:
-    ///   - include: Patterns to include.
-    ///   - excluding: Patterns to exclude.
-    ///   - directory: Root directory path for matching.
-    ///   - options: Matching and traversal options.
-    ///   - body: Closure called for each matching path (after deduplication).
-    /// - Throws: `ISO_9945.Kernel.Glob.Error` on failure.
     public static func match(
         include: [Pattern],
         excluding: [Pattern] = [],
@@ -109,7 +75,6 @@ extension Glob {
         }
     }
 
-    /// Convenience: matches files using a glob pattern, returning collected results.
     public static func match(
         pattern: Pattern,
         in directory: borrowing Path.Borrowed,
@@ -120,7 +85,6 @@ extension Glob {
         return results
     }
 
-    /// Convenience: matches files using multiple patterns with exclusions, returning collected results.
     public static func match(
         include: [Pattern],
         excluding: [Pattern] = [],
@@ -135,10 +99,8 @@ extension Glob {
     }
 }
 
-// MARK: - Private Implementation
-
 extension Glob {
-    /// Recursively matches segments against the filesystem, yielding each match.
+
     private static func matchSegments(
         _ segments: [Segment],
         segmentStrings: [Swift.String],
@@ -153,7 +115,7 @@ extension Glob {
         }
 
         guard segmentIndex < segments.count else {
-            // Yield matched path as Swift.String for Copyable collection/sorting
+
             body(
                 unsafe Swift.String(
                     cString: UnsafeRawPointer(currentPath.view.pointer).assumingMemoryBound(
@@ -184,14 +146,10 @@ extension Glob {
         case .pattern:
             let entries = try listDirectory(currentPath.view, options: options)
 
-            // Build fnmatch flags from L1 options
             var fnmatchFlags: ISO_9945.Glob.Fnmatch.Options = [.pathname]
             if options.caseInsensitive { fnmatchFlags.insert(.casefold) }
             if options.dotfiles == .explicit { fnmatchFlags.insert(.period) }
 
-            // Convert pattern segment to path view and match against entries.
-            // Pattern strings from pattern.raw should never contain interior NUL;
-            // if conversion fails, treat as no matches.
             let matchedEntries: [ISO_9945.Kernel.Directory.Entry]
             do throws(Path.String.Conversion.Error) {
                 matchedEntries = try Path.scope(segmentStrings[segmentIndex]) { segmentView in
@@ -200,10 +158,7 @@ extension Glob {
                             return false
                         }
                         return entry.withName { name in
-                            // fnmatch failure (e.g. malformed pattern bytes) is treated
-                            // as no match, matching this scope's existing convention of
-                            // degrading conversion failures to "no matches" rather than
-                            // propagating through Path.scope's non-throwing body closure.
+
                             {
                                 do throws(ISO_9945.Glob.Fnmatch.Error) {
                                     return try ISO_9945.Glob.fnmatch(
@@ -247,8 +202,7 @@ extension Glob {
             )
 
             let entries = try listDirectory(currentPath.view, options: options)
-            // `**` is the pattern's last segment — file entries beneath it
-            // are leaf matches, not just intermediate dirs to descend.
+
             let isTerminalDoubleStar = segmentIndex + 1 == segments.count
             for entry in entries {
                 if shouldSkipEntry(entry, options: options, forDoubleStar: true) {
@@ -257,7 +211,6 @@ extension Glob {
 
                 let nextPath = appendPath(currentPath, entry)
 
-                // Use d_type when available to avoid stat() syscall
                 let entryIsDir: Bool =
                     if let type = entry.type {
                         type == .directory
@@ -288,9 +241,6 @@ extension Glob {
         }
     }
 
-    /// Checks if an entry should be skipped based on dotfile policy.
-    ///
-    /// Operates on `name` bytes directly — no Swift.String allocation.
     private static func shouldSkipEntry(
         _ entry: ISO_9945.Kernel.Directory.Entry,
         options: Options,
@@ -316,13 +266,8 @@ extension Glob {
     }
 }
 
-// MARK: - Filesystem Helpers
-
 extension Glob {
-    /// Lists directory entries via L2 `ISO_9945.Kernel.Directory.Stream`.
-    ///
-    /// Returns raw `ISO_9945.Kernel.Directory.Entry` values — callers use `rawName`
-    /// for path construction and `withName(_:)` only when pattern matching requires it.
+
     private static func listDirectory(
         _ path: borrowing Path.Borrowed,
         options: Options
@@ -351,7 +296,6 @@ extension Glob {
         return entries
     }
 
-    /// Checks if path exists via L2 `ISO_9945.Kernel.File.Stats`.
     private static func pathExists(_ path: borrowing Path.Borrowed) -> Bool {
         do throws(ISO_9945.Kernel.File.Stats.Error) {
             _ = try ISO_9945.Kernel.File.Stats.get(path: path)
@@ -361,7 +305,6 @@ extension Glob {
         }
     }
 
-    /// Checks if path is a directory via L2 `ISO_9945.Kernel.File.Stats`.
     private static func isDirectory(_ path: borrowing Path.Borrowed, followSymlinks: Bool) -> Bool {
         let stats: ISO_9945.Kernel.File.Stats?
         do throws(ISO_9945.Kernel.File.Stats.Error) {
@@ -375,13 +318,6 @@ extension Glob {
         return stats?.type == .directory
     }
 
-    /// Appends a directory entry's name to a path.
-    ///
-    /// Constructs the path directly from `name` bytes — no Swift.String
-    /// allocation or Path.scope round-trip. Uses the same separator and
-    /// null-termination logic as `Path.Protocol.appending`.
-    ///
-    /// `name.count` excludes the NUL terminator that backs the entry's raw bytes.
     private static func appendPath(
         _ base: borrowing Path,
         _ entry: ISO_9945.Kernel.Directory.Entry
@@ -392,10 +328,6 @@ extension Glob {
             && baseView.pointer[baseView.count - 1] != ASCII.Character.Graphic.slant
         let sepSize = needsSep ? 1 : 0
 
-        // `Path` is `~Copyable`, but `withName`'s closure result type `R` is
-        // implicitly `Copyable` — so the buffer is built inside the closure
-        // (where `name`'s pointer is valid) and only adopted into a `Path`
-        // once control returns to this `Copyable`-only boundary.
         let (buffer, totalCount): (UnsafeMutablePointer<Path.Char>, Int) = unsafe entry.withName {
             name in
             let nameCount = name.count
@@ -417,10 +349,6 @@ extension Glob {
         return unsafe Path(adopting: buffer, count: totalCount)
     }
 
-    /// Appends literal bytes to a path.
-    ///
-    /// Constructs the path directly from UTF-8 bytes — no String allocation
-    /// or Path.scope round-trip. Same buffer pattern as entry-based appendPath.
     private static func appendPath(
         _ base: borrowing Path,
         _ component: [UInt8]
@@ -448,10 +376,8 @@ extension Glob {
     }
 }
 
-// MARK: - Error Mapping
-
 extension Glob.Error {
-    /// Maps L2 directory errors to L1 glob errors.
+
     init(from error: ISO_9945.Kernel.Directory.Error, pathView: borrowing Path.Borrowed) {
         let path = unsafe Swift.String(
             cString: UnsafeRawPointer(pathView.pointer).assumingMemoryBound(to: CChar.self)
@@ -459,7 +385,6 @@ extension Glob.Error {
         self.init(from: error, path: path)
     }
 
-    /// Maps L2 directory errors to L1 glob errors.
     init(from error: ISO_9945.Kernel.Directory.Error, path: Swift.String) {
         switch error {
         case .permission:
