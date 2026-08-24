@@ -18,7 +18,7 @@
 
     private func pollTestSignalHandler(_: Int32) {}
 
-    private func installNonRestartingSIGUSR1Handler() -> sigaction {
+    private func installNonRestartingSIGURGHandler() -> sigaction {
         var previous = sigaction()
         var action = sigaction()
         #if canImport(Darwin)
@@ -31,7 +31,7 @@
         #endif
         action.sa_flags = 0
         sigemptyset(&action.sa_mask)
-        sigaction(SIGUSR1, &action, &previous)
+        sigaction(SIGURG, &action, &previous)
         return previous
     }
 
@@ -64,7 +64,7 @@
     private func pollThreadBody(_ context: PollRunContext) {
         var unblock = sigset_t()
         sigemptyset(&unblock)
-        sigaddset(&unblock, SIGUSR1)
+        sigaddset(&unblock, SIGURG)
         pthread_sigmask(SIG_UNBLOCK, &unblock, nil)
 
         let start = monotonicNowNanoseconds()
@@ -83,7 +83,7 @@
     private func interrupterThreadBody(_ context: PollInterrupterContext) {
         for _ in 0..<12 {
             usleep(50_000)
-            pthread_kill(context.target, SIGUSR1)
+            pthread_kill(context.target, SIGURG)
         }
     }
 
@@ -93,10 +93,12 @@
         func pollWithTimeoutReturnsNearDeadlineDespiteRepeatedEINTR() throws {
             let descriptors = try POSIX.Kernel.Pipe.pipe()
 
-            let previousHandler = installNonRestartingSIGUSR1Handler()
+            // LLDB stops on SIGUSR1 by default. SIGURG still interrupts poll,
+            // but the debugger passes it through without stopping the process.
+            let previousHandler = installNonRestartingSIGURGHandler()
             defer {
                 var restore = previousHandler
-                sigaction(SIGUSR1, &restore, nil)
+                sigaction(SIGURG, &restore, nil)
             }
 
             let runContext = PollRunContext(
