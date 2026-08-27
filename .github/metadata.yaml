@@ -2,7 +2,7 @@
 # Triaged by AI-assisted bulk pass (2026-04-29).
 description: "Type-safe POSIX syscall wrappers for Swift."
 topics:
-  - foundations
+  - compositions
   - posix
 homepage: "https://swift-institute.org"
 socialPreview:

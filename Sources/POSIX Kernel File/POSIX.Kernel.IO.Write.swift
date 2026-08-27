@@ -70,7 +70,7 @@ extension POSIX.Kernel.IO.Write {
             let n = unsafe try write(descriptor, from: remaining)
             if n == 0 {
 
-                throw .platform(Error_Primitives.Error(code: .POSIX.EIO))
+                throw .platform(Error.Error(code: .POSIX.EIO))
             }
             written += n
         }

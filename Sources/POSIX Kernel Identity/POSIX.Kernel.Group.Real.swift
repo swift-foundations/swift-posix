@@ -13,7 +13,7 @@ extension POSIX.Kernel.Group.Real {
     }
 
     @inlinable
-    public static func set(_ gid: ISO_9945.Kernel.Group.ID) throws(Error_Primitives.Error) {
+    public static func set(_ gid: ISO_9945.Kernel.Group.ID) throws(Error.Error) {
         try ISO_9945.Kernel.Group.Real.set(gid)
     }
 }

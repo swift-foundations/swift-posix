@@ -49,31 +49,31 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-equation-primitives.git",
+            url: "https://github.com/swift-molecules/swift-equation.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-hash-primitives.git",
+            url: "https://github.com/swift-molecules/swift-hash.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-error-primitives.git",
+            url: "https://github.com/swift-molecules/swift-error.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-path-primitives.git",
+            url: "https://github.com/swift-molecules/swift-path.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-loader-primitives.git",
+            url: "https://github.com/swift-molecules/swift-loader.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-glob-primitives.git",
+            url: "https://github.com/swift-molecules/swift-glob.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            url: "https://github.com/swift-molecules/swift-either.git",
             branch: "main"
         ),
         .package(url: "https://github.com/swift-iso/swift-iso-9945.git", branch: "main"),
@@ -83,7 +83,7 @@ let package = Package(
         .target(
             name: "POSIX Core",
             dependencies: [
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
+                .product(name: "Error", package: "swift-error"),
 
                 .product(name: "ISO 9945 Core", package: "swift-iso-9945"),
             ]
@@ -93,9 +93,9 @@ let package = Package(
             name: "POSIX Kernel Descriptor",
             dependencies: [
                 "POSIX Core",
-                .product(name: "Error Primitives", package: "swift-error-primitives"),
-                .product(name: "Equation Primitives", package: "swift-equation-primitives"),
-                .product(name: "Hash Primitives", package: "swift-hash-primitives"),
+                .product(name: "Error", package: "swift-error"),
+                .product(name: "Equation", package: "swift-equation"),
+                .product(name: "Hash", package: "swift-hash"),
                 .product(name: "ISO 9945 Kernel File", package: "swift-iso-9945"),
             ]
         ),
@@ -104,8 +104,8 @@ let package = Package(
             name: "POSIX Kernel File",
             dependencies: [
                 "POSIX Core",
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
-                .product(name: "Either Primitives", package: "swift-either-primitives"),
+                .product(name: "Path", package: "swift-path"),
+                .product(name: "Either", package: "swift-either"),
                 .product(name: "ISO 9945 Kernel File", package: "swift-iso-9945"),
             ]
         ),
@@ -217,12 +217,12 @@ let package = Package(
             name: "POSIX Kernel Glob",
             dependencies: [
                 "POSIX Core",
-                .product(name: "Path Primitives", package: "swift-path-primitives"),
+                .product(name: "Path", package: "swift-path"),
                 .product(name: "ISO 9945 Kernel Directory", package: "swift-iso-9945"),
                 .product(name: "ISO 9945 Kernel File", package: "swift-iso-9945"),
 
                 .product(name: "ISO 9945 Glob", package: "swift-iso-9945"),
-                .product(name: "Glob Primitives", package: "swift-glob-primitives"),
+                .product(name: "Glob", package: "swift-glob"),
             ]
         ),
 
@@ -281,7 +281,7 @@ let package = Package(
                 "POSIX Core",
                 .product(name: "ISO 9945 Core", package: "swift-iso-9945"),
                 .product(name: "ISO 9945 Loader", package: "swift-iso-9945"),
-                .product(name: "Loader Primitives", package: "swift-loader-primitives"),
+                .product(name: "Loader", package: "swift-loader"),
             ]
         ),
 

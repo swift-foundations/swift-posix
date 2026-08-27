@@ -1,4 +1,4 @@
-internal import Either_Primitives
+internal import Either
 internal import ISO_9945_Kernel_File
 
 extension ISO_9945.Kernel.File.Handle {
@@ -33,7 +33,7 @@ extension ISO_9945.Kernel.File.Handle {
                 throw .left(
                     Self.Error(
                         from: ISO_9945.Kernel.IO.Write.Error.platform(
-                            Error_Primitives.Error(code: .POSIX.EIO)
+                            Error.Error(code: .POSIX.EIO)
                         ),
                         operation: .write
                     )

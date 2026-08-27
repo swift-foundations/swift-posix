@@ -1,8 +1,8 @@
-public import Glob_Primitives
+public import Glob
 internal import ISO_9945_Glob
 internal import ISO_9945_Kernel_Directory
 @_spi(Syscall) internal import ISO_9945_Kernel_File
-public import Path_Primitives
+public import Path
 
 extension Glob {
 

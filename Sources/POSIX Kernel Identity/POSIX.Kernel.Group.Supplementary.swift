@@ -8,7 +8,7 @@ extension POSIX.Kernel.Group {
 extension POSIX.Kernel.Group.Supplementary {
 
     @inlinable
-    public static func get() throws(Error_Primitives.Error) -> [ISO_9945.Kernel.Group.ID] {
+    public static func get() throws(Error.Error) -> [ISO_9945.Kernel.Group.ID] {
         try ISO_9945.Kernel.Group.Supplementary.get()
     }
 }

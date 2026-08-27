@@ -1,5 +1,5 @@
 @_spi(Syscall) public import ISO_9945_Kernel_File
-public import Path_Primitives
+public import Path
 
 extension POSIX.Kernel.File.Flush {
 
@@ -14,7 +14,7 @@ extension POSIX.Kernel.File.Flush {
 
             switch error {
             case .handle(let e): throw .handle(e)
-            case .path: throw .platform(Error_Primitives.Error(code: .POSIX.ENOENT))
+            case .path: throw .platform(Error.Error(code: .POSIX.ENOENT))
             case .platform(let e): throw .platform(e)
             }
         }

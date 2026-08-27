@@ -19,11 +19,11 @@ extension POSIX.Kernel.Poll {
     public static func poll(
         _ entries: inout [ISO_9945.Kernel.Poll.Entry],
         timeout: Int32
-    ) throws(Error_Primitives.Error) -> Int {
+    ) throws(Error.Error) -> Int {
 
         guard timeout > 0 else {
             while true {
-                do throws(Error_Primitives.Error) {
+                do throws(Error.Error) {
                     return try ISO_9945.Kernel.Poll.poll(&entries, timeout: timeout)
                 } catch  where error.code.isInterrupted {
                     continue
@@ -34,7 +34,7 @@ extension POSIX.Kernel.Poll {
         let start = Clock.Continuous.now
         var remaining = timeout
         while true {
-            do throws(Error_Primitives.Error) {
+            do throws(Error.Error) {
                 return try ISO_9945.Kernel.Poll.poll(&entries, timeout: remaining)
             } catch  where error.code.isInterrupted {
                 let elapsedMilliseconds =

@@ -1,7 +1,7 @@
 # POSIX Kernel
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-foundations/swift-posix/workflows/CI/badge.svg)](https://github.com/swift-foundations/swift-posix/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-compositions/swift-posix/workflows/CI/badge.svg)](https://github.com/swift-compositions/swift-posix/actions/workflows/ci.yml)
 
 Type-safe POSIX syscall wrappers for Swift. Signals, process management, and dynamic library loading with typed throws and full Sendable compliance.
 
@@ -25,7 +25,7 @@ Type-safe POSIX syscall wrappers for Swift. Signals, process management, and dyn
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-foundations/swift-posix.git", from: "0.1.0")
+    .package(url: "https://github.com/swift-compositions/swift-posix.git", from: "0.1.0")
 ]
 ```
 
@@ -119,7 +119,7 @@ case .parent(let child):
 ```
 POSIX.Kernel.Close.Error
 ├── handle(POSIX.Kernel.Descriptor.Validity.Error)   // descriptor was not a valid open handle
-└── platform(Error_Primitives.Error)                 // underlying close(2) errno
+└── platform(Error.Error)                            // underlying close(2) errno
 ```
 
 Because it is declared with typed throws, the do/catch is exhaustive with no default branch:
@@ -139,7 +139,7 @@ do throws(POSIX.Kernel.Close.Error) {
 }
 ```
 
-Most other operations in this package surface the lower-layer typed errors they wrap — `ISO_9945.Kernel.Process.Error`, `ISO_9945.Kernel.Signal.Error`, `ISO_9945.Kernel.File.Flush.Error`, `Memory.Lock.Error`, `ISO_9945.Loader.Error`, and `Error_Primitives.Error` among them — each of which is likewise exhaustively matchable.
+Most other operations in this package surface the lower-layer typed errors they wrap — `ISO_9945.Kernel.Process.Error`, `ISO_9945.Kernel.Signal.Error`, `ISO_9945.Kernel.File.Flush.Error`, `Memory.Lock.Error`, `ISO_9945.Loader.Error`, and `Error.Error` among them — each of which is likewise exhaustively matchable.
 
 ---
 
@@ -147,11 +147,11 @@ Most other operations in this package surface the lower-layer typed errors they 
 
 ### Dependencies
 
-- [swift-kernel-primitives](https://github.com/coenttb/swift-kernel-primitives): Base kernel type and error codes
+- [swift-kernel](https://github.com/swift-compositions/swift-kernel): Base kernel type and error codes
 
 ### Used By
 
-- [swift-kernel](https://github.com/swift-foundations/swift-kernel): Higher-level kernel abstractions
+- [swift-kernel](https://github.com/swift-compositions/swift-kernel): Higher-level kernel abstractions
 
 ---
 

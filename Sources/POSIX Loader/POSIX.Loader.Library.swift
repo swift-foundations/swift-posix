@@ -1,5 +1,5 @@
 public import ISO_9945_Loader
-public import Loader_Primitives
+public import Loader
 
 extension POSIX.Loader {
 

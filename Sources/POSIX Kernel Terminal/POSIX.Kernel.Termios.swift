@@ -24,7 +24,7 @@
 
         public static func get(
             _ descriptor: borrowing POSIX.Kernel.Descriptor
-        ) throws(Error_Primitives.Error) -> ISO_9945.Kernel.Termios.Attributes {
+        ) throws(Error.Error) -> ISO_9945.Kernel.Termios.Attributes {
             try ISO_9945.Kernel.Termios.Attributes.get(descriptor)
         }
     }

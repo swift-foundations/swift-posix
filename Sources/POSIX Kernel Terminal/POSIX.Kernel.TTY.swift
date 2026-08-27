@@ -24,7 +24,7 @@
 
         public static func query(
             _ descriptor: borrowing POSIX.Kernel.Descriptor
-        ) throws(Error_Primitives.Error) -> ISO_9945.Kernel.TTY.Size {
+        ) throws(Error.Error) -> ISO_9945.Kernel.TTY.Size {
             try ISO_9945.Kernel.TTY.Size.query(descriptor)
         }
     }

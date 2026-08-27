@@ -1,7 +1,7 @@
 #if !os(Windows)
 
-    public import Path_Primitives
-    public import Glob_Primitives
+    public import Path
+    public import Glob
 
     public func makePath(_ string: Swift.String) -> Path {
         let utf8 = Array(string.utf8)

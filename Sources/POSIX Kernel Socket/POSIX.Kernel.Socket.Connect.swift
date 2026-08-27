@@ -36,7 +36,7 @@ extension POSIX.Kernel.Socket.Connect {
         var entries = [ISO_9945.Kernel.Poll.Entry(descriptor, requested: .output)]
 
         while true {
-            do throws(Error_Primitives.Error) {
+            do throws(Error.Error) {
                 let ready = try ISO_9945.Kernel.Poll.poll(&entries, timeout: -1)
                 if ready > 0 { break }
             } catch  where error.code.isInterrupted {
@@ -48,7 +48,7 @@ extension POSIX.Kernel.Socket.Connect {
 
         let code = try ISO_9945.Kernel.Socket.getError(descriptor)
         guard code == .posix(0) else {
-            throw .platform(Error_Primitives.Error(code: code))
+            throw .platform(Error.Error(code: code))
         }
     }
 }

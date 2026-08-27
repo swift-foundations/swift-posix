@@ -11,9 +11,9 @@ extension POSIX.Kernel.File.Truncate {
     public static func truncate(
         _ descriptor: borrowing ISO_9945.Kernel.Descriptor,
         to length: ISO_9945.Kernel.File.Size
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         while true {
-            do throws(Error_Primitives.Error) {
+            do throws(Error.Error) {
                 try ISO_9945.Kernel.File.Truncate.truncate(descriptor, to: length)
                 return
             } catch  where error.code.isInterrupted {
@@ -26,9 +26,9 @@ extension POSIX.Kernel.File.Truncate {
     public static func truncate(
         path: UnsafePointer<CChar>,
         to length: ISO_9945.Kernel.File.Size
-    ) throws(Error_Primitives.Error) {
+    ) throws(Error.Error) {
         while true {
-            do throws(Error_Primitives.Error) {
+            do throws(Error.Error) {
                 try unsafe ISO_9945.Kernel.File.Truncate.truncate(path: path, to: length)
                 return
             } catch  where error.code.isInterrupted {
