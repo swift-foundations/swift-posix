@@ -65,7 +65,7 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-loader.git",
+            url: "https://github.com/swift-molecules/swift-loader-vocabulary.git",
             branch: "main"
         ),
         .package(
@@ -281,7 +281,7 @@ let package = Package(
                 "POSIX Core",
                 .product(name: "ISO 9945 Core", package: "swift-iso-9945"),
                 .product(name: "ISO 9945 Loader", package: "swift-iso-9945"),
-                .product(name: "Loader", package: "swift-loader"),
+                .product(name: "Loader", package: "swift-loader-vocabulary"),
             ]
         ),
 
